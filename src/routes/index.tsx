@@ -1,7 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { MapPin, Sparkles, Award, Compass, Users, Ticket } from "lucide-react";
+import { MapPin, Award, Compass, Users, Ticket } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { AnimatedTrail } from "@/components/animated-trail";
+import { HeroScenes } from "@/components/hero-scenes";
+import { AGENCIES } from "@/components/government-logos";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
@@ -19,35 +21,26 @@ export const Route = createFileRoute("/")({
   component: Landing,
 });
 
-const PARTNERS = ["URA", "NHB", "STB", "SLA", "CDC", "NAC"];
-
 function Landing() {
   return (
     <div className="min-h-screen bg-hero bg-tile">
       <SiteHeader />
 
-      {/* Hero */}
-      <section className="relative overflow-hidden">
-        <div className="mx-auto max-w-6xl px-6 pt-20 pb-28 md:pt-28 md:pb-36">
+      {/* Hero with crossfading scenes */}
+      <HeroScenes>
+        <div className="mx-auto max-w-6xl px-6 pt-24 pb-40 md:pt-32 md:pb-48">
           <div className="max-w-3xl">
-            <div className="inline-flex animate-fade-up items-center gap-2 rounded-full border border-gold/40 bg-secondary/5 px-3 py-1 text-xs text-gold">
-              <Sparkles className="h-3.5 w-3.5" />
-              A living heritage experience · Singapore
-            </div>
-            <h1 className="mt-6 animate-fade-up font-serif text-5xl leading-[1.05] text-cream md:text-7xl">
-              Jalan <span className="text-gold">Stories</span> —
-              <br />
-              Discover the Soul of{" "}
-              <span className="italic text-sand">Jalan Besar</span>
-            </h1>
-            <p
-              className="mt-6 animate-fade-up text-lg text-muted-foreground md:text-xl"
-              style={{ animationDelay: "120ms" }}
+            <h1
+              className="animate-fade-up font-serif font-bold"
+              style={{
+                fontSize: "clamp(2.5rem, 8vw, 5rem)",
+                color: "#FDF6E3",
+                lineHeight: 1.05,
+                letterSpacing: "-0.02em",
+              }}
             >
-              A self-guided heritage trail through Singapore's most storied
-              neighbourhood. Five stops, live craft demonstrations, an AR puzzle
-              hunt and a digital passport of stamps you keep forever.
-            </p>
+              Jalan Stories
+            </h1>
 
             <div
               className="mt-10 grid animate-fade-up gap-4 md:grid-cols-3"
@@ -77,12 +70,7 @@ function Landing() {
             </div>
           </div>
         </div>
-
-        {/* Animated dashed trail across the bottom */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 opacity-70">
-          <AnimatedTrail className="h-full w-full" />
-        </div>
-      </section>
+      </HeroScenes>
 
       {/* Feature highlights */}
       <section className="mx-auto max-w-6xl px-6 py-24">
@@ -111,24 +99,61 @@ function Landing() {
         </div>
       </section>
 
-      {/* Partners */}
-      <section className="border-y border-white/5 bg-black/20 py-12">
-        <div className="mx-auto max-w-6xl px-6">
-          <p className="mb-6 text-center text-xs uppercase tracking-[0.25em] text-muted-foreground">
-            In partnership with
+      {/* Partners — In Collaboration With */}
+      <section
+        style={{
+          background: "rgba(255,255,255,0.03)",
+          borderTop: "1px solid rgba(212,160,23,0.15)",
+          borderBottom: "1px solid rgba(212,160,23,0.15)",
+          padding: "40px 24px",
+        }}
+      >
+        <div className="mx-auto max-w-6xl">
+          <p
+            className="text-center"
+            style={{
+              fontFamily: "Georgia, serif",
+              fontStyle: "italic",
+              fontSize: "13px",
+              color: "#D4A017",
+              letterSpacing: "0.1em",
+              marginBottom: "24px",
+            }}
+          >
+            In Collaboration With
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-4">
-            {PARTNERS.map((p) => (
-              <span
-                key={p}
-                className="font-serif text-2xl tracking-widest text-sand/60 transition hover:text-gold"
-              >
-                {p}
-              </span>
+          <div className="grid grid-cols-3 md:grid-cols-6" style={{ gap: "12px" }}>
+            {AGENCIES.map(({ Logo, line1, line2 }, i) => (
+              <div key={i} className="flex flex-col items-center">
+                <div
+                  className="flex w-full items-center justify-center"
+                  style={{
+                    background: "rgba(255,255,255,0.06)",
+                    border: "1px solid rgba(212,160,23,0.3)",
+                    borderRadius: "12px",
+                    padding: "12px 16px",
+                  }}
+                >
+                  <Logo className="w-full h-auto" />
+                </div>
+                <div
+                  style={{
+                    fontSize: "10px",
+                    color: "#E8D5B0",
+                    textAlign: "center",
+                    marginTop: "8px",
+                    lineHeight: 1.3,
+                  }}
+                >
+                  <div>{line1}</div>
+                  <div>{line2}</div>
+                </div>
+              </div>
             ))}
           </div>
         </div>
       </section>
+
 
       {/* Footer */}
       <footer className="mx-auto max-w-6xl px-6 py-14">
