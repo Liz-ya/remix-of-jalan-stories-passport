@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState, type TouchEvent } from "react";
+import { useEffect, useRef, useState, type ReactNode, type TouchEvent } from "react";
 
 type Scene = {
   label: string;
   background: string;
-  pattern: JSX.Element;
+  pattern: ReactNode;
 };
 
 const ARCH_PATTERN = (
