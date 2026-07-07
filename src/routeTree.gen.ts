@@ -13,6 +13,7 @@ import { Route as TrailRouteImport } from './routes/trail'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PuzzleStopIdRouteImport } from './routes/puzzle.$stopId'
 import { Route as AuthenticatedPassportRouteImport } from './routes/_authenticated/passport'
 
 const TrailRoute = TrailRouteImport.update({
@@ -34,6 +35,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PuzzleStopIdRoute = PuzzleStopIdRouteImport.update({
+  id: '/puzzle/$stopId',
+  path: '/puzzle/$stopId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedPassportRoute = AuthenticatedPassportRouteImport.update({
   id: '/passport',
   path: '/passport',
@@ -45,12 +51,14 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/trail': typeof TrailRoute
   '/passport': typeof AuthenticatedPassportRoute
+  '/puzzle/$stopId': typeof PuzzleStopIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/trail': typeof TrailRoute
   '/passport': typeof AuthenticatedPassportRoute
+  '/puzzle/$stopId': typeof PuzzleStopIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -59,12 +67,13 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/trail': typeof TrailRoute
   '/_authenticated/passport': typeof AuthenticatedPassportRoute
+  '/puzzle/$stopId': typeof PuzzleStopIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/trail' | '/passport'
+  fullPaths: '/' | '/auth' | '/trail' | '/passport' | '/puzzle/$stopId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/trail' | '/passport'
+  to: '/' | '/auth' | '/trail' | '/passport' | '/puzzle/$stopId'
   id:
     | '__root__'
     | '/'
@@ -72,6 +81,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/trail'
     | '/_authenticated/passport'
+    | '/puzzle/$stopId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -79,6 +89,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   TrailRoute: typeof TrailRoute
+  PuzzleStopIdRoute: typeof PuzzleStopIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -111,6 +122,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/puzzle/$stopId': {
+      id: '/puzzle/$stopId'
+      path: '/puzzle/$stopId'
+      fullPath: '/puzzle/$stopId'
+      preLoaderRoute: typeof PuzzleStopIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/passport': {
       id: '/_authenticated/passport'
       path: '/passport'
@@ -137,6 +155,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   TrailRoute: TrailRoute,
+  PuzzleStopIdRoute: PuzzleStopIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
