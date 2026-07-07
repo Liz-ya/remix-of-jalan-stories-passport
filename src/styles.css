@@ -166,3 +166,26 @@
 @utility animate-glow {
   animation: glow-pulse 2.4s ease-in-out infinite;
 }
+
+/* Leaflet marker overrides */
+.jalan-marker { background: transparent; border: none; }
+.jalan-marker-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 9999px;
+  background: #C0392B;
+  color: #fff;
+  font-family: Georgia, serif;
+  font-weight: 700;
+  border: 3px solid #D4A017;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.45), 0 0 0 4px rgba(212,160,23,0.15);
+}
+.jalan-marker-inner.visited {
+  background: linear-gradient(135deg, #D4A017, #B8860B);
+  color: #1A1A2E;
+}
+.leaflet-container { background: #16213E; font-family: inherit; }
+.leaflet-control-attribution { font-size: 10px !important; }
