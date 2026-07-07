@@ -1,7 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { MapPin, Sparkles, Award, Compass, Users, Ticket } from "lucide-react";
+import { MapPin, Award, Compass, Users, Ticket } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { AnimatedTrail } from "@/components/animated-trail";
+import { HeroScenes } from "@/components/hero-scenes";
+import { AGENCIES } from "@/components/government-logos";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
