@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      scans: {
+        Row: {
+          id: string
+          qr_payload: string
+          scanned_at: string
+          stop_id: number
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          qr_payload: string
+          scanned_at?: string
+          stop_id: number
+          user_id: string
+        }
+        Update: {
+          id?: string
+          qr_payload?: string
+          scanned_at?: string
+          stop_id?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_badges: {
         Row: {
           badge_id: string
