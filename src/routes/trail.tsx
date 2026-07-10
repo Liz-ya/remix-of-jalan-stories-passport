@@ -67,10 +67,10 @@ function TrailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-hero bg-tile">
+    <div className="min-h-dvh bg-hero bg-tile pb-safe">
       <SiteHeader />
 
-      <div className="mx-auto max-w-6xl px-4 py-6 md:px-6 md:py-10">
+      <div className="mx-auto w-full max-w-6xl px-4 py-6 md:px-6 md:py-10">
         <div className="mb-6">
           <p className="text-xs uppercase tracking-[0.2em] text-gold">The Trail</p>
           <h1 className="mt-2 font-serif text-3xl text-cream md:text-5xl">Five stops. Any order.</h1>
@@ -79,9 +79,15 @@ function TrailPage() {
           </p>
         </div>
 
-        {/* Map: full-viewport height on mobile (minus header ~64 and bottom nav ~72), aspect on desktop */}
-        <div className="h-[calc(100vh-64px-72px)] w-full md:h-[560px]">
-          <LeafletTrailMap onSelect={setSelected} visits={visits} className="h-full w-full" />
+        {/* Map wrapper: sits below any Radix modal (z-0) */}
+        <div className="relative z-0 h-[60dvh] w-full md:h-[560px]">
+          <LeafletTrailMap
+            onSelect={setSelected}
+            visits={visits}
+            targetStop={selected}
+            suppressed={qrOpen}
+            className="h-full w-full"
+          />
         </div>
 
         {/* Live Demos board */}
@@ -97,11 +103,11 @@ function TrailPage() {
         </section>
       </div>
 
-      {/* Bottom sheet for stop details (mobile-friendly) */}
-      <Sheet open={!!selected} onOpenChange={(o) => !o && setSelected(null)}>
+      {/* Bottom sheet for stop details — unmounted while QR scanner is open so map/popup can't cover it */}
+      <Sheet open={!!selected && !qrOpen} onOpenChange={(o) => !o && setSelected(null)}>
         <SheetContent
           side="bottom"
-          className="max-h-[85vh] overflow-y-auto rounded-t-2xl border-t border-gold/30 bg-card"
+          className="z-[9990] max-h-[85dvh] overflow-y-auto rounded-t-2xl border-t border-gold/30 bg-card pb-safe"
         >
           {selected && (
             <>
@@ -138,10 +144,10 @@ function TrailPage() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                   <Button
                     onClick={() => setQrOpen(true)}
-                    className="bg-rust-gradient text-cream hover:opacity-90 shadow-gold"
+                    className="min-h-11 bg-rust-gradient text-cream hover:opacity-90 shadow-gold"
                   >
                     <QrCode className="mr-2 h-4 w-4" />
                     Scan QR
@@ -149,7 +155,7 @@ function TrailPage() {
                   <Link
                     to="/puzzle/$stopId"
                     params={{ stopId: String(selected.id) }}
-                    className="inline-flex items-center justify-center rounded-md border border-gold/50 bg-secondary/10 px-4 py-2 text-sm font-medium text-gold hover:bg-secondary/20"
+                    className="inline-flex min-h-11 items-center justify-center rounded-md border border-gold/50 bg-secondary/10 px-4 py-2 text-sm font-medium text-gold hover:bg-secondary/20"
                   >
                     <Sparkles className="mr-2 h-4 w-4" /> AR Puzzle
                   </Link>
@@ -161,12 +167,12 @@ function TrailPage() {
       </Sheet>
 
       <Dialog open={qrOpen} onOpenChange={setQrOpen}>
-        <DialogContent className="bg-card">
+        <DialogContent className="z-[9999] max-w-[95vw] bg-card sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="font-serif text-cream">Point your camera</DialogTitle>
             <DialogDescription>Scan the QR code posted at this stop to unlock its stamp.</DialogDescription>
           </DialogHeader>
-          <div className="mx-auto my-4 flex h-52 w-52 items-center justify-center rounded-lg bg-cream p-3">
+          <div className="mx-auto my-4 flex aspect-square w-full max-w-[13rem] items-center justify-center rounded-lg bg-cream p-3">
             <div className="grid h-full w-full grid-cols-8 grid-rows-8 gap-0.5">
               {Array.from({ length: 64 }).map((_, i) => (
                 <div key={i} className={((i * 7 + (i % 5)) % 3 === 0) ? "bg-background" : "bg-cream"} />
@@ -174,9 +180,22 @@ function TrailPage() {
             </div>
           </div>
           {selected && (
-            <Button onClick={() => markVisited(selected.id)} className="bg-gold-gradient text-background hover:opacity-90">
+            <Button
+              onClick={() => markVisited(selected.id)}
+              className="min-h-11 bg-gold-gradient text-background hover:opacity-90"
+            >
               Simulate scan · Earn stamp
             </Button>
+          )}
+          {selected && (
+            <Link
+              to="/puzzle/$stopId"
+              params={{ stopId: String(selected.id) }}
+              onClick={() => setQrOpen(false)}
+              className="mt-2 inline-flex min-h-11 items-center justify-center rounded-md border border-gold/40 bg-secondary/10 px-4 py-2 text-sm text-gold"
+            >
+              Open live camera scanner →
+            </Link>
           )}
           {!user && (
             <p className="text-center text-xs text-muted-foreground">
