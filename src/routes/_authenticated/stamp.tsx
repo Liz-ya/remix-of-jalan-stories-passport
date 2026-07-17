@@ -9,7 +9,7 @@ import { STOPS, BADGES, REWARDS, computeBadges, unlockedRewardIds } from "@/lib/
 import { Award, Download, Stamp, Ticket, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/_authenticated/passport")({
+export const Route = createFileRoute("/_authenticated/stamp")({
   head: () => ({
     meta: [
       { title: "My Passport · Jalan Stories" },
