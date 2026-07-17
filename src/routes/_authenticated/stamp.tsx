@@ -12,14 +12,14 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/_authenticated/stamp")({
   head: () => ({
     meta: [
-      { title: "My Passport · Jalan Stories" },
-      { name: "description", content: "Your Jalan Besar heritage passport, stamps, badges and rewards." },
+      { title: "My Stamp · Jalan Stories" },
+      { name: "description", content: "Your Jalan Besar heritage stamps, badges and rewards." },
     ],
   }),
-  component: PassportPage,
+  component: StampPage,
 });
 
-function PassportPage() {
+function StampPage() {
   const { user } = Route.useRouteContext();
   const [visitedIds, setVisitedIds] = useState<number[]>([]);
   const [loading, setLoading] = useState(true);
