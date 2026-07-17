@@ -34,20 +34,21 @@ function Landing() {
               <Sparkles className="h-3.5 w-3.5" />
               A living heritage experience · Singapore
             </div>
-            <h1 className="mt-6 animate-fade-up font-serif text-5xl leading-[1.05] text-cream md:text-7xl">
+            <h1 className="mt-6 animate-fade-up font-serif text-hero text-cream">
               Jalan <span className="text-gold">Stories</span> —
               <br />
               Discover the Soul of{" "}
               <span className="italic text-sand">Jalan Besar</span>
             </h1>
             <p
-              className="mt-6 animate-fade-up text-lg text-muted-foreground md:text-xl"
+              className="mt-6 max-w-prose animate-fade-up text-body text-muted-foreground"
               style={{ animationDelay: "120ms" }}
             >
               A self-guided heritage trail through Singapore's most storied
               neighbourhood. Five stops, live craft demonstrations, an AR puzzle
-              hunt and a digital passport of stamps you keep forever.
+              hunt and a digital stamp of your journey you keep forever.
             </p>
+
 
             <div
               className="mt-10 grid animate-fade-up gap-4 md:grid-cols-3"
