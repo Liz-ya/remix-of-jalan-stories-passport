@@ -9,17 +9,17 @@ import { STOPS, BADGES, REWARDS, computeBadges, unlockedRewardIds } from "@/lib/
 import { Award, Download, Stamp, Ticket, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/_authenticated/passport")({
+export const Route = createFileRoute("/_authenticated/stamp")({
   head: () => ({
     meta: [
-      { title: "My Passport · Jalan Stories" },
-      { name: "description", content: "Your Jalan Besar heritage passport, stamps, badges and rewards." },
+      { title: "My Stamp · Jalan Stories" },
+      { name: "description", content: "Your Jalan Besar heritage stamps, badges and rewards." },
     ],
   }),
-  component: PassportPage,
+  component: StampPage,
 });
 
-function PassportPage() {
+function StampPage() {
   const { user } = Route.useRouteContext();
   const [visitedIds, setVisitedIds] = useState<number[]>([]);
   const [loading, setLoading] = useState(true);
@@ -48,7 +48,7 @@ function PassportPage() {
     <div className="min-h-screen bg-hero bg-tile pb-24">
       <SiteHeader />
       <div className="mx-auto max-w-5xl px-6 py-10">
-        {/* Passport card */}
+        {/* Stamp card */}
         <div className="relative overflow-hidden rounded-2xl border-4 border-double border-gold bg-gradient-to-br from-surface via-background to-surface p-8 shadow-deep">
           <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-secondary/10 blur-3xl" />
           <div className="pointer-events-none absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-primary/10 blur-3xl" />
@@ -56,7 +56,7 @@ function PassportPage() {
           <div className="flex flex-wrap items-start justify-between gap-6">
             <div>
               <div className="flex items-center gap-2 text-xs uppercase tracking-[0.35em] text-gold">
-                <Ticket className="h-3.5 w-3.5" /> Heritage Passport
+                <Ticket className="h-3.5 w-3.5" /> Heritage Stamp
               </div>
               <h1 className="mt-3 font-serif text-4xl text-cream md:text-5xl">
                 {displayName}'s Jalan Stories

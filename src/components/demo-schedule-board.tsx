@@ -26,7 +26,7 @@ export function DemoScheduleBoard() {
         <div>
           <p className="font-serif text-[10px] uppercase tracking-[0.4em] text-rust">Today's Board</p>
           <h2 className="mt-1 font-serif text-3xl text-gold" style={{ textShadow: "0 0 12px rgba(212,160,23,0.25)" }}>
-            Live Craft Demos
+            Live Demos
           </h2>
         </div>
         <div className="text-right font-mono text-xs text-gold/70">

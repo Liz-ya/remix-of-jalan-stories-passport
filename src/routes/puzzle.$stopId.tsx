@@ -172,7 +172,7 @@ function PuzzlePage() {
           onScan={handleScanResult}
           onDone={() => {
             setArOpen(false);
-            setTimeout(() => navigate({ to: "/passport" }), 700);
+            setTimeout(() => navigate({ to: "/stamp" }), 700);
           }}
         />
       )}

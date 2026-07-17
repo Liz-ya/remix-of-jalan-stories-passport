@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { Map as LMap, Marker, Polyline, CircleMarker } from "leaflet";
-import { STOPS, MAP_CENTER, MAP_ZOOM, type Stop } from "@/lib/trail-data";
+import { STOPS, type Stop } from "@/lib/trail-data";
 import { Locate, Navigation, X } from "lucide-react";
 
 // Compass features require HTTPS (Geolocation + DeviceOrientation).
@@ -76,8 +76,6 @@ export function LeafletTrailMap({ onSelect, visits, targetStop, suppressed, clas
       if (cancelled || !containerRef.current || mapRef.current) return;
 
       const map = L.map(containerRef.current, {
-        center: MAP_CENTER,
-        zoom: MAP_ZOOM,
         zoomControl: false,
       });
       mapRef.current = map;
@@ -109,10 +107,16 @@ export function LeafletTrailMap({ onSelect, visits, targetStop, suppressed, clas
         });
         const m = L.marker([stop.lat, stop.lng], { icon })
           .addTo(map)
-          .on("click", () => onSelect(stop));
+          .on("click", () => onSelect(stop))
+          .bindPopup(`<strong>${stop.id}. ${stop.name}</strong><br/><span style="font-size:11px;color:#666">${stop.location}</span>`);
         markersRef.current.push(m);
       });
+
+      // Fit bounds to all markers with ~15% padding
+      const bounds = L.latLngBounds(STOPS.map((s) => [s.lat, s.lng] as [number, number]));
+      map.fitBounds(bounds, { padding: [40, 40] });
     })();
+
 
     return () => {
       cancelled = true;

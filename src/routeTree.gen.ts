@@ -10,15 +10,21 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TrailRouteImport } from './routes/trail'
+import { Route as PassportRouteImport } from './routes/passport'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PuzzleStopIdRouteImport } from './routes/puzzle.$stopId'
-import { Route as AuthenticatedPassportRouteImport } from './routes/_authenticated/passport'
+import { Route as AuthenticatedStampRouteImport } from './routes/_authenticated/stamp'
 
 const TrailRoute = TrailRouteImport.update({
   id: '/trail',
   path: '/trail',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PassportRoute = PassportRouteImport.update({
+  id: '/passport',
+  path: '/passport',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -40,24 +46,26 @@ const PuzzleStopIdRoute = PuzzleStopIdRouteImport.update({
   path: '/puzzle/$stopId',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedPassportRoute = AuthenticatedPassportRouteImport.update({
-  id: '/passport',
-  path: '/passport',
+const AuthenticatedStampRoute = AuthenticatedStampRouteImport.update({
+  id: '/stamp',
+  path: '/stamp',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/passport': typeof PassportRoute
   '/trail': typeof TrailRoute
-  '/passport': typeof AuthenticatedPassportRoute
+  '/stamp': typeof AuthenticatedStampRoute
   '/puzzle/$stopId': typeof PuzzleStopIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/passport': typeof PassportRoute
   '/trail': typeof TrailRoute
-  '/passport': typeof AuthenticatedPassportRoute
+  '/stamp': typeof AuthenticatedStampRoute
   '/puzzle/$stopId': typeof PuzzleStopIdRoute
 }
 export interface FileRoutesById {
@@ -65,22 +73,30 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/passport': typeof PassportRoute
   '/trail': typeof TrailRoute
-  '/_authenticated/passport': typeof AuthenticatedPassportRoute
+  '/_authenticated/stamp': typeof AuthenticatedStampRoute
   '/puzzle/$stopId': typeof PuzzleStopIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/trail' | '/passport' | '/puzzle/$stopId'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/passport'
+    | '/trail'
+    | '/stamp'
+    | '/puzzle/$stopId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/trail' | '/passport' | '/puzzle/$stopId'
+  to: '/' | '/auth' | '/passport' | '/trail' | '/stamp' | '/puzzle/$stopId'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/passport'
     | '/trail'
-    | '/_authenticated/passport'
+    | '/_authenticated/stamp'
     | '/puzzle/$stopId'
   fileRoutesById: FileRoutesById
 }
@@ -88,6 +104,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  PassportRoute: typeof PassportRoute
   TrailRoute: typeof TrailRoute
   PuzzleStopIdRoute: typeof PuzzleStopIdRoute
 }
@@ -99,6 +116,13 @@ declare module '@tanstack/react-router' {
       path: '/trail'
       fullPath: '/trail'
       preLoaderRoute: typeof TrailRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/passport': {
+      id: '/passport'
+      path: '/passport'
+      fullPath: '/passport'
+      preLoaderRoute: typeof PassportRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -129,22 +153,22 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PuzzleStopIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/passport': {
-      id: '/_authenticated/passport'
-      path: '/passport'
-      fullPath: '/passport'
-      preLoaderRoute: typeof AuthenticatedPassportRouteImport
+    '/_authenticated/stamp': {
+      id: '/_authenticated/stamp'
+      path: '/stamp'
+      fullPath: '/stamp'
+      preLoaderRoute: typeof AuthenticatedStampRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
-  AuthenticatedPassportRoute: typeof AuthenticatedPassportRoute
+  AuthenticatedStampRoute: typeof AuthenticatedStampRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedPassportRoute: AuthenticatedPassportRoute,
+  AuthenticatedStampRoute: AuthenticatedStampRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -154,6 +178,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  PassportRoute: PassportRoute,
   TrailRoute: TrailRoute,
   PuzzleStopIdRoute: PuzzleStopIdRoute,
 }
