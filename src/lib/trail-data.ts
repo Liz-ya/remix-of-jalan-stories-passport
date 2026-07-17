@@ -22,8 +22,8 @@ export const STOPS: Stop[] = [
     location: "Jalan Besar Rd × Tyrwhitt Rd",
     description:
       "For a century, this corner supplied Singapore with bolts, brass and know-how. Every workshop here has a story bolted into its shopfront.",
-    lat: 1.3134,
-    lng: 103.8611,
+    lat: 1.307381,
+    lng: 103.856897,
     x: 12,
     y: 68,
   },
@@ -34,8 +34,8 @@ export const STOPS: Stop[] = [
     location: "Petain Road",
     description:
       "A pastel parade of Rococo façades — considered among the most ornate shophouses in Singapore. Each tile was a family's calling card.",
-    lat: 1.3158,
-    lng: 103.8590,
+    lat: 1.309431,
+    lng: 103.855739,
     x: 32,
     y: 40,
   },
@@ -46,8 +46,8 @@ export const STOPS: Stop[] = [
     location: "Berseh Food Centre",
     description:
       "Where third-generation hawkers still ladle out kway chap, tau huay and coffee ground to order. The neighbourhood's living kitchen.",
-    lat: 1.3106,
-    lng: 103.8570,
+    lat: 1.308203,
+    lng: 103.856436,
     x: 52,
     y: 58,
   },
@@ -58,8 +58,8 @@ export const STOPS: Stop[] = [
     location: "Syed Alwi Road",
     description:
       "Bolts of sari silk, Tamil music, Malay tailoring, Chinese haberdashery — a street where every language is measured in yards.",
-    lat: 1.3095,
-    lng: 103.8583,
+    lat: 1.311825,
+    lng: 103.855653,
     x: 72,
     y: 34,
   },
@@ -70,12 +70,13 @@ export const STOPS: Stop[] = [
     location: "Jalan Besar Stadium",
     description:
       "The blue-collared cathedral of Singapore football. From the Malaya Cup to today's Lions, roars from these stands shaped a nation.",
-    lat: 1.3115,
-    lng: 103.8631,
+    lat: 1.309403,
+    lng: 103.854767,
     x: 88,
     y: 62,
   },
 ];
+
 
 export interface DemoSlot {
   id: string;
