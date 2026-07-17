@@ -12,7 +12,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Self-guided heritage trail, live craft demos and digital passport through Singapore's Jalan Besar.",
+          "Self-guided heritage trail, live demos and a digital stamp through Singapore's Jalan Besar.",
       },
     ],
   }),
@@ -108,7 +108,7 @@ function Landing() {
           <Feature
             icon={<Award className="h-6 w-6" />}
             title="Digital Rewards"
-            body="Collect stamps in your passport, unlock heritage badges, and earn discount vouchers from partner businesses along the way."
+            body="Collect stamps in your digital stamp book, unlock heritage badges, and earn discount vouchers from partner businesses along the way."
           />
         </div>
       </section>

@@ -62,7 +62,7 @@ function TrailPage() {
       return;
     }
     setVisits((prev) => new Set(prev).add(stopId));
-    toast.success("Stamp added to your passport!");
+    toast.success("Stamp added to your stamp!");
     setQrOpen(false);
   }
 

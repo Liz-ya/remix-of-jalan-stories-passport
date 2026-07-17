@@ -13,7 +13,7 @@ export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
       { title: "Sign in · Jalan Stories" },
-      { name: "description", content: "Sign in to save your Jalan Stories passport progress." },
+      { name: "description", content: "Sign in to save your Jalan Stories stamp progress." },
     ],
   }),
   component: AuthPage,
