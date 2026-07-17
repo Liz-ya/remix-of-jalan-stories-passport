@@ -68,12 +68,13 @@ function Landing() {
                 accent="teal"
               />
               <CtaCard
-                to="/passport"
+                to="/stamp"
                 icon={<Ticket className="h-5 w-5" />}
-                title="Claim Your Passport"
+                title="Claim Your Stamp"
                 sub="Collect stamps & rewards"
                 accent="gold"
               />
+
             </div>
           </div>
         </div>

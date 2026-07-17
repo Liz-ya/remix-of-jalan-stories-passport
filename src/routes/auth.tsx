@@ -28,7 +28,7 @@ function AuthPage() {
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
-      if (data.user) navigate({ to: "/passport" });
+      if (data.user) navigate({ to: "/stamp" });
     });
   }, [navigate]);
 
@@ -40,7 +40,7 @@ function AuthPage() {
         const { error } = await supabase.auth.signUp({
           email,
           password,
-          options: { emailRedirectTo: window.location.origin + "/passport" },
+          options: { emailRedirectTo: window.location.origin + "/stamp" },
         });
         if (error) throw error;
         toast.success("Account created — you're in!");
@@ -49,7 +49,8 @@ function AuthPage() {
         if (error) throw error;
         toast.success("Welcome back!");
       }
-      navigate({ to: "/passport" });
+      navigate({ to: "/stamp" });
+
     } catch (err: unknown) {
       toast.error(err instanceof Error ? err.message : "Something went wrong");
     } finally {
@@ -67,12 +68,13 @@ function AuthPage() {
               <Ticket className="h-5 w-5" />
             </div>
             <div>
-              <div className="font-serif text-xl text-cream">Claim your passport</div>
+              <div className="font-serif text-xl text-cream">Claim your stamp</div>
               <div className="text-xs text-muted-foreground">
                 {mode === "signin" ? "Welcome back to Jalan Stories" : "Create your traveller account"}
               </div>
             </div>
           </div>
+
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
@@ -105,12 +107,12 @@ function AuthPage() {
               disabled={loading}
               className="w-full bg-rust-gradient text-cream hover:opacity-90"
             >
-              {loading ? "Please wait…" : mode === "signin" ? "Sign in" : "Create passport"}
+              {loading ? "Please wait…" : mode === "signin" ? "Sign in" : "Create stamp"}
             </Button>
           </form>
 
           <div className="mt-6 text-center text-sm text-muted-foreground">
-            {mode === "signin" ? "New to the trail? " : "Already have a passport? "}
+            {mode === "signin" ? "New to the trail? " : "Already have a stamp? "}
             <button
               type="button"
               onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
