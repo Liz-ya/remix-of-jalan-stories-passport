@@ -125,7 +125,30 @@ function TrailPage() {
               <div className="mt-4 space-y-5 pb-6">
                 <p className="text-sm leading-relaxed text-muted-foreground">{selected.description}</p>
 
+                {selected.highlights && (
+                  <div className="rounded-lg border border-gold/20 bg-black/30 p-4">
+                    <div className="mb-3 border-b border-gold/20 pb-2">
+                      <div className="text-[10px] uppercase tracking-[0.3em] text-rust">{selected.highlights.subheading}</div>
+                      <div className="font-serif text-xl text-gold">{selected.highlights.heading}</div>
+                    </div>
+                    <div className="space-y-3">
+                      {selected.highlights.blocks.map((b) => (
+                        <div key={b.title}>
+                          <div className="font-serif text-sm text-cream">{b.title}</div>
+                          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{b.body}</p>
+                        </div>
+                      ))}
+                    </div>
+                    {selected.highlights.footer && (
+                      <p className="mt-4 border-t border-gold/20 pt-3 text-sm italic text-sand/80">
+                        {selected.highlights.footer.text}
+                      </p>
+                    )}
+                  </div>
+                )}
+
                 <DemoStatusRow stopId={selected.id} />
+
 
                 <div>
                   <div className="mb-2 text-xs uppercase tracking-widest text-muted-foreground">Puzzle</div>
