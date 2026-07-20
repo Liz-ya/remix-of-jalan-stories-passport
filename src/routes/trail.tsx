@@ -75,7 +75,7 @@ function TrailPage() {
           <p className="text-xs uppercase tracking-[0.2em] text-gold">The Trail</p>
           <h1 className="mt-2 font-serif text-3xl text-cream md:text-5xl">Five stops. Any order.</h1>
           <p className="mt-2 max-w-xl text-sm text-muted-foreground md:text-base">
-            Tap a marker to read the story, check live demos, and scan the on-site QR to earn your stamp.
+            Tap a marker to see what's there. When you arrive, scan the QR and answer the question in front of you.
           </p>
         </div>
 
@@ -157,7 +157,7 @@ function TrailPage() {
                     params={{ stopId: String(selected.id) }}
                     className="inline-flex min-h-11 items-center justify-center rounded-md border border-gold/50 bg-secondary/10 px-4 py-2 text-sm font-medium text-gold hover:bg-secondary/20"
                   >
-                    <Sparkles className="mr-2 h-4 w-4" /> AR Puzzle
+                    <Sparkles className="mr-2 h-4 w-4" /> Answer the question
                   </Link>
                 </div>
               </div>

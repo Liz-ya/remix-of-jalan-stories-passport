@@ -1,3 +1,15 @@
+export interface HighlightBlock {
+  title: string;
+  body: string;
+}
+
+export interface StopHighlights {
+  heading: string;
+  subheading: string;
+  blocks: HighlightBlock[];
+  footer?: { text: string; linkDemoId?: string };
+}
+
 export interface Stop {
   id: number;
   name: string;
@@ -9,6 +21,7 @@ export interface Stop {
   // Legacy percent coords (kept for any decorative SVG use)
   x: number;
   y: number;
+  highlights?: StopHighlights;
 }
 
 export const MAP_CENTER: [number, number] = [1.3127, 103.8567];
@@ -21,7 +34,7 @@ export const STOPS: Stop[] = [
     theme: "Hardware & Industrial Trades",
     location: "Jalan Besar Rd × Tyrwhitt Rd",
     description:
-      "For a century, this corner supplied Singapore with bolts, brass and know-how. Every workshop here has a story bolted into its shopfront.",
+      "If something in Singapore broke in the last hundred years, someone probably came here to fix it. The shops still sell bolts by weight and advice for free.",
     lat: 1.307381,
     lng: 103.856897,
     x: 12,
@@ -33,7 +46,7 @@ export const STOPS: Stop[] = [
     theme: "Peranakan Shophouse Architecture",
     location: "Petain Road",
     description:
-      "A pastel parade of Rococo façades — considered among the most ornate shophouses in Singapore. Each tile was a family's calling card.",
+      "The most over-decorated shophouses in Singapore, and proudly so. Every tile on these walls was a family showing off. Stand across the road and count the colours.",
     lat: 1.309431,
     lng: 103.855739,
     x: 32,
@@ -45,7 +58,7 @@ export const STOPS: Stop[] = [
     theme: "Hawker Food Heritage",
     location: "Berseh Food Centre",
     description:
-      "Where third-generation hawkers still ladle out kway chap, tau huay and coffee ground to order. The neighbourhood's living kitchen.",
+      "Third-generation stalls, no queues of tourists, kway chap the way the grandfather made it. This is where the neighbourhood actually eats.",
     lat: 1.308203,
     lng: 103.856436,
     x: 52,
@@ -57,7 +70,7 @@ export const STOPS: Stop[] = [
     theme: "Textile & Multicultural Trade",
     location: "Syed Alwi Road",
     description:
-      "Bolts of sari silk, Tamil music, Malay tailoring, Chinese haberdashery — a street where every language is measured in yards.",
+      "Sari silk next to Malay tailors next to Chinese haberdashers, all selling cloth by the yard and none in the same language. It works anyway. It has for a century.",
     lat: 1.311825,
     lng: 103.855653,
     x: 72,
@@ -65,15 +78,45 @@ export const STOPS: Stop[] = [
   },
   {
     id: 5,
-    name: "The Stadium and the Street",
-    theme: "Sports & Civic Identity",
-    location: "Jalan Besar Stadium",
+    name: "Desker Road",
+    theme: "Five lives of one street",
+    location: "Desker Road",
     description:
-      "The blue-collared cathedral of Singapore football. From the Malaya Cup to today's Lions, roars from these stands shaped a nation.",
+      "Named for a colonial-era butcher, remembered for its cattle yards and back-lane years, and still the beating heart of Little Bangladesh. And at No. 109, coffee has been roasting through it all.",
     lat: 1.309403,
     lng: 103.854767,
     x: 88,
     y: 62,
+    highlights: {
+      heading: "Desker Road",
+      subheading: "Five lives of one street",
+      blocks: [
+        {
+          title: "1860s — The butcher's street",
+          body: "Named after Andre Filipe Desker, a Malacca-born Eurasian who ran the largest slaughterhouse in colonial Singapore. His ad in The Straits Times, June 1865, promised \"a regular supply of the best mutton.\" His sheep came from Australia and lived in pens where these shophouses now stand.",
+        },
+        {
+          title: "The cattle years",
+          body: "Grass and water made this area Singapore's cattle district from the 1850s. The street names still say so — Lembu Road next door means \"cattle\" in Malay. Buffalo Road and Kerbau Road are a short walk away.",
+        },
+        {
+          title: "After the war",
+          body: "Desker Road's back lanes became one of Singapore's most talked-about red-light areas. Older Singaporeans still lower their voices at the street's name.",
+        },
+        {
+          title: "1991 — Conserved",
+          body: "URA added Desker Road's shophouses to the Little India conservation area. The paint is protected. So, in theory, is everything the street remembers.",
+        },
+        {
+          title: "Today — Little Bangladesh",
+          body: "The stretch near Serangoon Road is the heart of Singapore's Bangladeshi community, who call it the Mini Mart. On Sundays, Bangladesh Square — the corner of Desker and Lembu, the exact site of the old cattle yards — fills with people, biryani and paan.",
+        },
+      ],
+      footer: {
+        text: "And at No. 109, behind an unmarked shopfront, coffee has been roasting through it all.",
+        linkDemoId: "d-sinhin",
+      },
+    },
   },
 ];
 
@@ -83,9 +126,16 @@ export interface DemoSlot {
   stopId: number;
   title: string;
   vendor: string;
+  location?: string;
   /** "HH:MM" 24h Singapore local time */
   start: string;
   end: string;
+  detail?: {
+    heading: string;
+    subheading: string;
+    body: string;
+    rows?: Array<{ label: string; value: string }>;
+  };
 }
 
 export const DEMOS: DemoSlot[] = [
@@ -94,6 +144,26 @@ export const DEMOS: DemoSlot[] = [
   { id: "d3", stopId: 4, title: "Traditional Block Printing", vendor: "Textile Heritage Centre", start: "14:00", end: "16:00" },
   { id: "d4", stopId: 2, title: "Roti Making", vendor: "Bakers of Jalan Besar", start: "15:30", end: "16:30" },
   { id: "d5", stopId: 1, title: "Hardware Craft", vendor: "Jalan Besar Hardware Co.", start: "17:00", end: "18:00" },
+  {
+    id: "d-sinhin",
+    stopId: 5,
+    title: "Traditional Coffee Roasting",
+    vendor: "Sin Hin & Co.",
+    location: "109 Desker Road",
+    start: "08:30",
+    end: "16:30",
+    detail: {
+      heading: "Sin Hin & Co.",
+      subheading: "Traditional coffee roasting · 109 Desker Road",
+      body:
+        "There's no sign worth noticing at No. 109. That's the point — Sin Hin sells to kopitiams, not to you. For over thirty years, this family firm has processed coffee beans on Desker Road, weekday mornings, weekends off, while the street changed around it.\n\nThey roast the Nanyang way: robusta beans, high heat, and — this is the part that surprises people — sugar and margarine thrown in with the beans. The sugar caramelises onto every bean and welds the batch into a solid block, which then has to be broken apart by hand with metal rods. That caramel crust is why kopi tastes nothing like café coffee: darker, thicker, with a burnt-butterscotch edge. It's a 19th-century workaround that became a national taste.\n\nRoasters like this used to be everywhere. Most are gone. Almost none let the public watch.",
+      rows: [
+        { label: "When to visit", value: "Mon–Fri, 8:30am–4:30pm (closed weekends)" },
+        { label: "What you'll see", value: "green beans going in, a caramelised block coming out, and the rods that break it" },
+        { label: "What you'll smell", value: "you'll know it from two shops away" },
+      ],
+    },
+  },
 ];
 
 export type DemoState = "live" | "soon" | "upcoming" | "ended";
@@ -109,7 +179,6 @@ export interface DemoStatusInfo {
 /** Interpret a HH:MM as Singapore local (UTC+8) time for TODAY. */
 function sgTimeToday(hhmm: string, now = new Date()): Date {
   const [h, m] = hhmm.split(":").map(Number);
-  // Compute UTC ms for today's H:M in SGT (UTC+8)
   const nowSg = new Date(now.getTime() + 8 * 3600 * 1000);
   const y = nowSg.getUTCFullYear();
   const mo = nowSg.getUTCMonth();

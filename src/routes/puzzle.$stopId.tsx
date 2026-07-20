@@ -13,11 +13,11 @@ import { X, Camera, Sparkles, CheckCircle2, MapPin } from "lucide-react";
 export const Route = createFileRoute("/puzzle/$stopId")({
   head: ({ params }) => {
     const stop = STOPS.find((s) => s.id === Number(params.stopId));
-    const title = stop ? `${stop.name} · AR Puzzle` : "AR Puzzle";
+    const title = stop ? `${stop.name} · Question` : "Question";
     return {
       meta: [
         { title: `${title} · Jalan Stories` },
-        { name: "description", content: "Point your camera to unlock the heritage story at this Jalan Besar stop." },
+        { name: "description", content: "Point your camera to unlock the heritage question at this Jalan Besar stop." },
       ],
     };
   },
