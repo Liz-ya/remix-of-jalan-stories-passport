@@ -12,7 +12,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Self-guided heritage trail, live demos and a digital stamp through Singapore's Jalan Besar.",
+          "Five stops around Jalan Besar. Walk them in any order, watch craftspeople at work, answer a question at each stop, and collect a stamp.",
       },
     ],
   }),
@@ -44,9 +44,9 @@ function Landing() {
               className="mt-6 max-w-prose animate-fade-up text-body text-muted-foreground"
               style={{ animationDelay: "120ms" }}
             >
-              A self-guided heritage trail through Singapore's most storied
-              neighbourhood. Five stops, live craft demonstrations, an AR puzzle
-              hunt and a digital stamp of your journey you keep forever.
+              Five stops around Jalan Besar. Walk them in any order, watch the
+              neighbourhood's craftspeople at work, answer a question you can
+              only answer by standing there, and collect a stamp at each one.
             </p>
 
 
@@ -98,17 +98,17 @@ function Landing() {
           <Feature
             icon={<MapPin className="h-6 w-6" />}
             title="The Trail"
-            body="Self-guided and flexible — start anywhere, in any order, at your own pace. Five stops woven along Jalan Besar's most tellable streets."
+            body="Start anywhere. There's no route, no guide, no right order — just five places worth stopping and one question at each."
           />
           <Feature
             icon={<Users className="h-6 w-6" />}
             title="Live Demos"
-            body="Real craftspeople, working in real time. Watch keys cut, tiles restored, sari draped and kopi brewed the way it's been done for generations."
+            body="The people who actually do the work, doing it in front of you. Keys cut, cloth printed, coffee roasted with sugar until it turns to caramel. You leave with something they made — or something you did."
           />
           <Feature
             icon={<Award className="h-6 w-6" />}
             title="Digital Rewards"
-            body="Collect stamps in your digital stamp book, unlock heritage badges, and earn discount vouchers from partner businesses along the way."
+            body="A stamp for every stop. Finish all five and the shops along the trail will knock something off your bill."
           />
         </div>
       </section>
@@ -140,8 +140,7 @@ function Landing() {
               Jalan <span className="text-gold">Stories</span>
             </div>
             <p className="mt-2 max-w-md text-sm text-muted-foreground">
-              A heritage collaboration between residents, craftspeople and
-              cultural agencies across Jalan Besar.
+              Built with the people of Jalan Besar.
             </p>
           </div>
           <Link
@@ -158,7 +157,7 @@ function Landing() {
           </Link>
         </div>
         <div className="mt-10 border-t border-white/10 pt-6 text-xs text-muted-foreground">
-          © {new Date().getFullYear()} Jalan Stories · Made with heritage in mind.
+          © {new Date().getFullYear()} Jalan Stories · Built with the people of Jalan Besar.
         </div>
       </footer>
     </div>

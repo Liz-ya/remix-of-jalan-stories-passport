@@ -74,7 +74,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 
 const TITLE = "Jalan Stories — Discover the Soul of Jalan Besar";
 const DESC =
-  "A self-guided heritage walking trail, live demos and a digital stamp through Singapore's most storied neighbourhood.";
+  "Five stops around Jalan Besar. Walk them in any order, watch craftspeople at work, answer a question at each stop, and collect a stamp.";
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({

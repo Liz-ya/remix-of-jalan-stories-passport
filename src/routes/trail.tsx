@@ -75,7 +75,7 @@ function TrailPage() {
           <p className="text-xs uppercase tracking-[0.2em] text-gold">The Trail</p>
           <h1 className="mt-2 font-serif text-3xl text-cream md:text-5xl">Five stops. Any order.</h1>
           <p className="mt-2 max-w-xl text-sm text-muted-foreground md:text-base">
-            Tap a marker to read the story, check live demos, and scan the on-site QR to earn your stamp.
+            Tap a marker to see what's there. When you arrive, scan the QR and answer the question in front of you.
           </p>
         </div>
 
@@ -125,7 +125,30 @@ function TrailPage() {
               <div className="mt-4 space-y-5 pb-6">
                 <p className="text-sm leading-relaxed text-muted-foreground">{selected.description}</p>
 
+                {selected.highlights && (
+                  <div className="rounded-lg border border-gold/20 bg-black/30 p-4">
+                    <div className="mb-3 border-b border-gold/20 pb-2">
+                      <div className="text-[10px] uppercase tracking-[0.3em] text-rust">{selected.highlights.subheading}</div>
+                      <div className="font-serif text-xl text-gold">{selected.highlights.heading}</div>
+                    </div>
+                    <div className="space-y-3">
+                      {selected.highlights.blocks.map((b) => (
+                        <div key={b.title}>
+                          <div className="font-serif text-sm text-cream">{b.title}</div>
+                          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{b.body}</p>
+                        </div>
+                      ))}
+                    </div>
+                    {selected.highlights.footer && (
+                      <p className="mt-4 border-t border-gold/20 pt-3 text-sm italic text-sand/80">
+                        {selected.highlights.footer.text}
+                      </p>
+                    )}
+                  </div>
+                )}
+
                 <DemoStatusRow stopId={selected.id} />
+
 
                 <div>
                   <div className="mb-2 text-xs uppercase tracking-widest text-muted-foreground">Puzzle</div>
@@ -157,7 +180,7 @@ function TrailPage() {
                     params={{ stopId: String(selected.id) }}
                     className="inline-flex min-h-11 items-center justify-center rounded-md border border-gold/50 bg-secondary/10 px-4 py-2 text-sm font-medium text-gold hover:bg-secondary/20"
                   >
-                    <Sparkles className="mr-2 h-4 w-4" /> AR Puzzle
+                    <Sparkles className="mr-2 h-4 w-4" /> Answer the question
                   </Link>
                 </div>
               </div>
