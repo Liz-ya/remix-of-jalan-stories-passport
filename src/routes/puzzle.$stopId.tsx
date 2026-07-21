@@ -371,14 +371,19 @@ function LockedPanel({ completedAt, stopName }: { completedAt: string; stopName:
 }
 
 function UnlockedPuzzle({ stop, expired }: { stop: (typeof STOPS)[number]; expired: boolean }) {
-  const [selected, setSelected] = useState<number | null>(null);
+  const [answer, setAnswer] = useState("");
   const [wrongCount, setWrongCount] = useState(0);
   const [shake, setShake] = useState(false);
   const [status, setStatus] = useState<"idle" | "wrong" | "correct">("idle");
 
+  // Demo validation: the accepted answer is the first word of the stop's
+  // name, case-insensitive (e.g. "Berseh", "Mustafa", "New").
+  const correctAnswer = stop.name.split(/\s+/)[0].replace(/[^\p{L}\p{N}]/gu, "");
+
   async function submit() {
-    if (selected == null) return;
-    if (selected === stop.puzzle.correctIndex) {
+    const given = answer.trim().replace(/[^\p{L}\p{N}]/gu, "");
+    if (!given) return;
+    if (given.toLowerCase() === correctAnswer.toLowerCase()) {
       setStatus("correct");
       toast.success("Correct! You've earned your stamp.");
       const { data: userData } = await supabase.auth.getUser();
@@ -426,41 +431,39 @@ function UnlockedPuzzle({ stop, expired }: { stop: (typeof STOPS)[number]; expir
             <div className="mt-2 font-serif text-lg">Correct! You've earned your stamp.</div>
           </motion.div>
         ) : (
-          <motion.div
+          <motion.form
             animate={shake ? { x: [0, -8, 8, -6, 6, 0] } : { x: 0 }}
             transition={{ duration: 0.4 }}
             className="mt-4 flex flex-col gap-[10px]"
+            onSubmit={(e) => {
+              e.preventDefault();
+              submit();
+            }}
           >
-            {stop.puzzle.options.map((opt, i) => {
-              const isSel = selected === i;
-              return (
-                <button
-                  key={i}
-                  onClick={() => setSelected(i)}
-                  className="w-full rounded-md px-4 text-left text-cream transition-all duration-200"
-                  style={{
-                    minHeight: "52px",
-                    background: isSel ? "rgba(212,160,23,0.22)" : "rgba(255,255,255,0.08)",
-                    border: isSel
-                      ? "1px solid rgba(212,160,23,0.9)"
-                      : "1px solid rgba(212,160,23,0.3)",
-                    boxShadow: isSel ? "0 6px 20px -10px rgba(212,160,23,0.6)" : "none",
-                  }}
-                >
-                  {opt}
-                </button>
-              );
-            })}
-            <button onClick={submit} disabled={selected == null} className="btn-cta mt-2">
+            <input
+              type="text"
+              value={answer}
+              onChange={(e) => setAnswer(e.target.value)}
+              placeholder="Type your answer…"
+              autoComplete="off"
+              autoCapitalize="off"
+              className="w-full rounded-md px-4 text-cream placeholder:text-cream/40 transition-all duration-200 focus:outline-none"
+              style={{
+                minHeight: "52px",
+                background: "rgba(255,255,255,0.08)",
+                border: "1px solid rgba(212,160,23,0.4)",
+              }}
+            />
+            <button type="submit" disabled={!answer.trim()} className="btn-cta mt-2">
               Submit Answer
             </button>
             {status === "wrong" && <p className="mt-1 text-sm text-rust">Not quite — try again</p>}
             {wrongCount >= 2 && (
               <p className="mt-1 rounded-md border border-gold/30 bg-black/30 p-3 text-xs text-sand">
-                <span className="text-gold">Hint:</span> {stop.puzzle.hint}
+                <span className="text-gold">Hint:</span> it's the first word of this stop's name.
               </p>
             )}
-          </motion.div>
+          </motion.form>
         )}
       </AnimatePresence>
     </div>
