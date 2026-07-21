@@ -5,7 +5,7 @@ import { STOPS, DEMOS, getActiveOrUpcomingDemo, getNextStop, walkingMinutes, for
 import { SiteHeader } from "@/components/site-header";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { X, Camera, MapPin, CheckCircle2, Sparkles } from "lucide-react";
+import { X, Camera, MapPin, CheckCircle2, Sparkles, Lock } from "lucide-react";
 import { isDemoMode } from "@/lib/demo-mode";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -33,6 +33,7 @@ function formatReturnDate(fromISO: string): string {
 
 type LockState =
   | { kind: "loading" }
+  | { kind: "guest" } // not signed in — puzzle locked until login
   | { kind: "unlocked"; expired?: boolean }
   | { kind: "locked"; completedAt: string; demoAttended: boolean };
 
@@ -55,7 +56,7 @@ function PuzzlePage() {
     (async () => {
       const { data: userData } = await supabase.auth.getUser();
       if (!userData.user) {
-        setLock({ kind: "unlocked" });
+        setLock({ kind: "guest" });
         return;
       }
       const { data } = await supabase
@@ -98,17 +99,14 @@ function PuzzlePage() {
 
         {/* SECTION 1: HERITAGE INFO */}
         <section className="mt-6">
-          <span className="inline-flex items-center rounded-full bg-[#C0392B] px-3 py-1 text-xs font-semibold text-white">
+          <span className="inline-flex items-center rounded-full bg-rust-gradient px-3 py-1 text-xs font-semibold text-cream">
             Stop {stop.id}
           </span>
-          <h1
-            className="mt-3 font-bold text-cream"
-            style={{ fontFamily: "Georgia, serif", fontSize: "28px", lineHeight: 1.15 }}
-          >
+          <h1 className="mt-3 font-serif text-h3 font-bold text-cream">
             {stop.name}
           </h1>
-          <p className="mt-1 italic text-gold" style={{ fontSize: "14px" }}>{stop.theme}</p>
-          <p className="mt-4 leading-relaxed text-cream/90" style={{ fontSize: "16px", lineHeight: 1.6 }}>
+          <p className="mt-1 text-small italic text-gold">{stop.theme}</p>
+          <p className="mt-4 text-body leading-relaxed text-cream/90">
             {stop.description}
           </p>
 
@@ -135,12 +133,13 @@ function PuzzlePage() {
 
         {/* SECTION 5: QUESTION */}
         <section ref={puzzleRef} className="mt-10">
-          <h2 style={{ fontFamily: "Georgia, serif", color: "#C0392B", fontWeight: 700, fontSize: "18px" }}>
+          <h2 className="font-serif text-lg font-bold text-rust">
             Heritage Challenge
           </h2>
           {lock.kind === "loading" && (
             <p className="mt-4 text-sm text-muted-foreground">Loading…</p>
           )}
+          {lock.kind === "guest" && <GuestLockedPanel />}
           {lock.kind === "locked" && (
             <LockedPanel completedAt={lock.completedAt} stopName={stop.name} />
           )}
@@ -149,16 +148,19 @@ function PuzzlePage() {
           )}
         </section>
 
-        {/* Only primary CTA — reveals/scrolls to puzzle */}
+        {/* Only primary CTA — scrolls to puzzle, or sends guests to sign in */}
         {lock.kind === "unlocked" && (
           <div className="mt-8">
-            <button
-              onClick={scrollToPuzzle}
-              className="w-full rounded-md text-white transition-opacity hover:opacity-90"
-              style={{ height: "52px", background: "#C0392B", fontFamily: "Georgia, serif", fontSize: "16px" }}
-            >
+            <button onClick={scrollToPuzzle} className="btn-cta">
               Answer the Question →
             </button>
+          </div>
+        )}
+        {lock.kind === "guest" && (
+          <div className="mt-8">
+            <Link to="/auth" className="btn-cta">
+              Answer the Question →
+            </Link>
           </div>
         )}
       </div>
@@ -172,14 +174,10 @@ function ArSection() {
   const [open, setOpen] = useState(false);
   return (
     <section className="mt-10">
-      <h2 className="italic text-gold" style={{ fontFamily: "Georgia, serif", fontSize: "16px" }}>
+      <h2 className="font-serif italic text-gold">
         Experience in AR
       </h2>
-      <button
-        onClick={() => setOpen(true)}
-        className="mt-3 flex w-full items-center justify-center gap-2 rounded-md text-cream hover:opacity-90"
-        style={{ height: "48px", background: "#1B6B7A", fontFamily: "Georgia, serif", fontSize: "16px" }}
-      >
+      <button onClick={() => setOpen(true)} className="btn-ar mt-3">
         <Camera className="h-4 w-4" /> Activate AR View
       </button>
       <p className="mt-2 text-xs text-muted-foreground">
@@ -295,7 +293,7 @@ function MapSection({ stop, nextMinutes, nextName }: { stop: { lat: number; lng:
 
   return (
     <section className="mt-10">
-      <h2 className="italic text-gold" style={{ fontFamily: "Georgia, serif", fontSize: "16px" }}>
+      <h2 className="font-serif italic text-gold">
         You are here
       </h2>
       <div ref={ref} className="mt-3 w-full overflow-hidden rounded-xl border border-gold/20" style={{ height: "220px", zIndex: 0 }} />
@@ -338,7 +336,7 @@ function LiveDemoSection({ stopId, demoMode }: { stopId: number; demoMode: boole
 
   return (
     <section className="mt-10">
-      <h2 className="italic text-gold" style={{ fontFamily: "Georgia, serif", fontSize: "16px" }}>
+      <h2 className="font-serif italic text-gold">
         Live Now at This Stop
       </h2>
       <div className="mt-3 rounded-xl border border-gold/30 bg-black/40 p-4">
@@ -363,6 +361,23 @@ function LiveDemoSection({ stopId, demoMode }: { stopId: number; demoMode: boole
 }
 
 /* ─────────────── Puzzle (Unlocked / Locked) ─────────────── */
+
+function GuestLockedPanel() {
+  return (
+    <div className="mt-4 rounded-xl border border-gold/25 bg-black/40 p-5 opacity-90">
+      <div className="flex items-center gap-2 text-gold">
+        <Lock className="h-5 w-5" />
+        <span className="font-serif text-lg">Locked</span>
+      </div>
+      <p className="mt-2 text-sm text-cream/80">
+        Sign in to check whether you've completed this stop and to answer the question.
+      </p>
+      <Link to="/auth" className="mt-3 inline-block text-sm text-gold underline underline-offset-4">
+        Sign in to unlock →
+      </Link>
+    </div>
+  );
+}
 
 function LockedPanel({ completedAt, stopName }: { completedAt: string; stopName: string }) {
   const returnDate = formatReturnDate(completedAt);
@@ -421,7 +436,7 @@ function UnlockedPuzzle({ stop, expired, demoMode }: { stop: typeof STOPS[number
           Your previous completion has expired. Complete again to earn rewards.
         </div>
       )}
-      <p className="text-cream" style={{ fontSize: "18px", lineHeight: 1.5 }}>{stop.puzzle.question}</p>
+      <p className="font-serif text-lg leading-snug text-cream">{stop.puzzle.question}</p>
 
       <AnimatePresence>
         {status === "correct" ? (
@@ -445,23 +460,19 @@ function UnlockedPuzzle({ stop, expired, demoMode }: { stop: typeof STOPS[number
                 <button
                   key={i}
                   onClick={() => setSelected(i)}
-                  className="w-full rounded-md px-4 text-left text-cream transition-colors"
+                  className="w-full rounded-md px-4 text-left text-cream transition-all duration-200"
                   style={{
-                    height: "52px",
+                    minHeight: "52px",
                     background: isSel ? "rgba(212,160,23,0.22)" : "rgba(255,255,255,0.08)",
                     border: isSel ? "1px solid rgba(212,160,23,0.9)" : "1px solid rgba(212,160,23,0.3)",
+                    boxShadow: isSel ? "0 6px 20px -10px rgba(212,160,23,0.6)" : "none",
                   }}
                 >
                   {opt}
                 </button>
               );
             })}
-            <button
-              onClick={submit}
-              disabled={selected == null}
-              className="mt-2 w-full rounded-md text-white disabled:opacity-50"
-              style={{ height: "52px", background: "#C0392B", fontFamily: "Georgia, serif", fontSize: "16px" }}
-            >
+            <button onClick={submit} disabled={selected == null} className="btn-cta mt-2">
               Submit Answer
             </button>
             {status === "wrong" && (

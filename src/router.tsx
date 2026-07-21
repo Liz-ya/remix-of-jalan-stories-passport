@@ -10,6 +10,9 @@ export const getRouter = () => {
     context: { queryClient },
     scrollRestoration: true,
     defaultPreloadStaleTime: 0,
+    // Cross-fade between pages on browsers that support the View Transitions
+    // API; everywhere else navigation simply stays instant.
+    defaultViewTransition: true,
   });
 
   return router;

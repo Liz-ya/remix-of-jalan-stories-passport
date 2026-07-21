@@ -35,64 +35,15 @@ export interface Stop {
 export const STOPS: Stop[] = [
   {
     id: 1,
-    name: "The Street That Fixed Everything",
-    theme: "Hardware & industrial trades",
-    location: "Desker Road / Jalan Besar Rd junction",
-    description:
-      "If something in Singapore broke in the last hundred years, someone probably came here to fix it. From the early 1900s, Jalan Besar's shophouses filled with hardware traders, ironmongers and mechanics selling bolts by weight and advice for free. Whole industries depended on this stretch — kitchen fitters, boat repairers, kopitiam owners with a busted stove. Today, the same shopfronts still hum with grinders and welding sparks, run mostly by second- and third-generation families who inherited both the trade and the tools. It is one of the last unbroken industrial streets in the city.",
-    lat: 1.3145,
-    lng: 103.8578,
-    x: 12,
-    y: 68,
-    facts: [
-      { label: "Est.", value: "Early 1900s" },
-      { label: "Trade shops", value: "Over 40 still active" },
-    ],
-    puzzle: {
-      question: "What are the shophouses along this stretch of Jalan Besar most historically known for?",
-      options: [
-        "Textile and tailoring",
-        "Hardware and industrial trades",
-        "Traditional medicine",
-        "Printing and bookbinding",
-      ],
-      correctIndex: 1,
-      hint: "Think of bolts, tools and welding sparks — the trade you'd come here to buy or fix.",
-    },
-  },
-  {
-    id: 2,
-    name: "Shophouse Chronicles",
-    theme: "Peranakan shophouse architecture",
-    location: "Tyrwhitt Road",
-    description:
-      "The shophouses on Tyrwhitt Road are among the most decorated in Singapore, and proudly so. Built in the late 1920s and 1930s by wealthy Peranakan families, each façade was a family showing off — hand-painted tiles imported from England, plaster cornices modelled on European villas, and pastel colours that changed by the year. Every ornament told the street who lived there and how well they'd done. The buildings survived the war, urban renewal and multiple owners because URA folded them into a conservation area in 1991. Stand across the road and count the colours: no two adjoining houses match.",
-    lat: 1.3135,
-    lng: 103.8570,
-    x: 32,
-    y: 40,
-    facts: [
-      { label: "Built", value: "1920s–1930s" },
-      { label: "Style", value: "Late Peranakan / Art Deco" },
-    ],
-    puzzle: {
-      question: "The elaborate façades of Tyrwhitt Road's shophouses were mostly built by which community?",
-      options: ["Colonial British administrators", "Peranakan (Straits Chinese) families", "Tamil merchants", "Bugis traders"],
-      correctIndex: 1,
-      hint: "This community was famous for imported tiles and mixing Chinese, Malay and European design.",
-    },
-  },
-  {
-    id: 3,
-    name: "Flavours of the Quarter",
+    name: "Berseh Food Centre",
     theme: "Hawker food heritage",
-    location: "Berseh Food Centre",
+    location: "166 Jalan Besar",
     description:
       "Berseh Food Centre is where the neighbourhood actually eats. Opened in 1985 to rehouse street hawkers who used to trade along the roadside, it now holds third-generation stalls making kway chap, chicken rice and Hokkien mee the way the grandfather made it — no queues of tourists, no reinvented menus. Several of the current stall owners started here as children, watching their parents render pork lard at 5 a.m. The recipes have not been written down; they are simply repeated. Come for breakfast, and you'll sit next to retirees who have been ordering the same plate every morning for twenty years.",
-    lat: 1.3120,
-    lng: 103.8562,
-    x: 52,
-    y: 58,
+    lat: 1.30790,
+    lng: 103.85760,
+    x: 12,
+    y: 68,
     facts: [
       { label: "Opened", value: "1985" },
       { label: "Original stalls", value: "Some 3rd generation" },
@@ -110,47 +61,52 @@ export const STOPS: Stop[] = [
     },
   },
   {
-    id: 4,
-    name: "Cloth, Colour & Community",
-    theme: "Textile and multicultural trade",
-    location: "Syed Alwi Road",
+    id: 2,
+    name: "Mustafa Mall Road",
+    theme: "Textiles, henna & round-the-clock trade",
+    location: "Syed Alwi Road, by Mustafa Centre",
     description:
-      "Syed Alwi Road is where sari silk sits next to Malay tailors sits next to Chinese haberdashers, all selling cloth by the yard and none in the same language. Since the 1930s this stretch has been Singapore's fabric market — bolts of chiffon, brocade and cotton stacked to the ceiling, prices called out in three tongues and sealed with a nod. It works anyway. It has for a century. Bridal families still come here to pick sari fabric; costume makers still come for stage silks; and the shopkeepers still remember which grandmother preferred which supplier.",
-    lat: 1.3108,
-    lng: 103.8555,
-    x: 72,
-    y: 34,
+      "Syed Alwi Road is where sari silk sits next to Malay tailors sits next to Chinese haberdashers, all selling cloth by the yard and none in the same language. Since the 1930s this stretch has been Singapore's fabric market — bolts of chiffon, brocade and cotton stacked to the ceiling, prices called out in three tongues and sealed with a nod. In 1971 a small garment shop called Mustafa opened here; it never stopped growing, and never stopped opening, becoming the 24-hour mall that now anchors the street. Bridal families still come to pick sari fabric, henna artists still work the five-foot ways, and the shopkeepers still remember which grandmother preferred which supplier.",
+    lat: 1.30960,
+    lng: 103.85500,
+    x: 32,
+    y: 40,
     facts: [
       { label: "Fabric trade since", value: "1930s" },
-      { label: "Languages traded in", value: "3 or more" },
+      { label: "Mustafa opened", value: "1971" },
     ],
     puzzle: {
-      question: "What has Syed Alwi Road primarily traded in for nearly a century?",
+      question: "What has the street outside Mustafa primarily traded in for nearly a century?",
       options: ["Spices", "Textiles and fabric", "Gold jewellery", "Timber"],
       correctIndex: 1,
       hint: "By the yard, in bolts stacked to the ceiling.",
     },
   },
   {
-    id: 5,
-    name: "The Stadium and the Street",
-    theme: "Sports, civic identity, community",
-    location: "Jalan Besar Stadium",
+    id: 3,
+    name: "Desker Road Shophouses",
+    theme: "Shophouse life & changing communities",
+    location: "Desker Road",
     description:
-      "Jalan Besar Stadium has been the neighbourhood's living room since 1929. It is where the Lions won their first Malaya Cups, where kampung boys tried out for national squads, and where the community still gathers on match nights with kopi and kacang. Rebuilt in 1999 and again refurbished for the SEA Games, the stadium anchors the southern end of the trail and gives Jalan Besar a civic identity most Singapore neighbourhoods lost decades ago. Walk past on a match evening and you'll hear the crowd two streets away — the same sound residents have heard for nearly a hundred years.",
-    lat: 1.3093,
-    lng: 103.8550,
-    x: 88,
-    y: 62,
+      "Desker Road is named after Andre Filipe Desker, a Malacca-born Eurasian who ran the largest slaughterhouse in colonial Singapore — this was the butcher's street of the 1860s, supplying the whole town with meat from the cattle yards next door. The two rows of shophouses have since lived several lives: trades, lodgings, and now the heart of Singapore's Bangladeshi community, who call the stretch the Mini Mart. Walk it slowly — behind an unmarked shopfront at No. 109, a family firm has been roasting coffee for kopitiams for over thirty years, while the street changed around it.",
+    lat: 1.30935,
+    lng: 103.85420,
+    x: 52,
+    y: 58,
     facts: [
-      { label: "Opened", value: "1929" },
-      { label: "Home of", value: "Singapore football" },
+      { label: "Named after", value: "A. F. Desker, 1860s" },
+      { label: "Today", value: "Little Bangladesh" },
     ],
     puzzle: {
-      question: "Jalan Besar Stadium has served as the historic home of which sport in Singapore?",
-      options: ["Cricket", "Rugby", "Football", "Field hockey"],
-      correctIndex: 2,
-      hint: "The Lions and the Malaya Cup are the clues.",
+      question: "Desker Road takes its name from Andre Filipe Desker. What business made him famous?",
+      options: [
+        "Textile weaving",
+        "Butchery and slaughterhouses",
+        "Goldsmithing",
+        "Shipping and trade",
+      ],
+      correctIndex: 1,
+      hint: "This was the butcher's street — think of the cattle yards next door.",
     },
     highlights: {
       heading: "Desker Road",
@@ -161,6 +117,83 @@ export const STOPS: Stop[] = [
         { title: "Today — Little Bangladesh", body: "The stretch is now the heart of Singapore's Bangladeshi community, who call it the Mini Mart." },
       ],
       footer: { text: "And at No. 109, behind an unmarked shopfront, coffee has been roasting through it all.", linkDemoId: "d-sinhin" },
+    },
+  },
+  {
+    id: 4,
+    name: "New World Gate, City Square Mall",
+    theme: "Singapore's first amusement park",
+    location: "City Square Mall, Kitchener Road",
+    description:
+      "The gate you just scanned once swallowed thousands of people a night. This was New World — Singapore's first amusement park, opened in 1923 by Straits Chinese brothers Ong Boon Tat and Ong Peng Hock, and the original of the three great \"Worlds\" that Great World and Gay World later copied. Packed into 45,000 square feet along Jalan Besar were rides, carousels, open-air cinemas, boxing and wrestling arenas, dance halls and no fewer than five opera stages. You could spend a whole day inside: family photo, haircut at the barber, hawker dinner, a stroll in the park — and never see it all. The park is gone, but its gate still stands where you do now: the only physical remnant of Singapore's first playground.",
+    lat: 1.31130,
+    lng: 103.85630,
+    x: 72,
+    y: 34,
+    facts: [
+      { label: "Opened", value: "1923" },
+      { label: "Size", value: "~45,000 sq ft" },
+      { label: "Closed", value: "April 1987" },
+      { label: "Gate rebuilt", value: "January 2011" },
+    ],
+    puzzle: {
+      question: "The historic gate outside City Square Mall once welcomed visitors to what?",
+      options: [
+        "A colonial railway station",
+        "New World Amusement Park",
+        "A cattle market",
+        "A cinema hall",
+      ],
+      correctIndex: 1,
+      hint: "Opera stages, cabaret dance halls and wrestling arenas — Singapore's first great \"World\".",
+    },
+    highlights: {
+      heading: "New World Gate",
+      subheading: "Singapore's first amusement park",
+      blocks: [
+        {
+          title: "1923 — The Ong brothers open the gates",
+          body: "Ong Boon Tat and Ong Peng Hock, sons of businessman Ong Sam Leong, opened New World as the first of the three \"Worlds\" — Great World (early 1930s) and Gay World (1936) followed. It sprawled across about 45,000 sq ft along Jalan Besar.",
+        },
+        {
+          title: "Five opera stages under one roof",
+          body: "Peking opera at the Octagonal Pavilion (Bajiao Ting) and the indoor Wa Wutai, a Fujian opera stage, Chaozhou opera at Bai Lao Hui — home of the Lau Sai Thor Guan Teochew Wayang troupe — and Cantonese opera at Riguang Tai (Sunshine Stage), said to be the park's biggest theatre.",
+        },
+        {
+          title: "Names on the marquee",
+          body: "Wrestler King Kong (Hungarian Emile Czaya), strongman Mat Tarzan, boxer Felix Boy — and Rose Chan, the 1950s \"Queen of Strip\", who also wrestled pythons and bent iron bars. In 1949 Madame Tai Fong's Fong Fong Revue drew crowds so large the colonial police warned that \"this monkey business must cease.\"",
+        },
+        {
+          title: "The part nobody puts on a poster",
+          body: "The cabaret \"lancing girls\" — three dance coupons for as little as a dollar — were philanthropists too. The Singapore Dance Hostesses' Association raised $13,000 for the Nanyang University building fund in 1953, and Rose Chan gave to charities for children, the elderly, TB patients and the blind.",
+        },
+        {
+          title: "1987 — Lights out, gate stays",
+          body: "Television, discos and shopping malls killed the park; it closed for good in April 1987 and Shaw sold the land to CDL. City Square Mall rose in its place, and in January 2011 the gate was reconstructed at City Green with NParks, NHB and URA — come back after dark for the light show projected onto it.",
+        },
+      ],
+    },
+  },
+  {
+    id: 5,
+    name: "Lembu Road Open Space",
+    theme: "Cattle district & community life",
+    location: "Lembu Road, off Jalan Besar",
+    description:
+      "\"Lembu\" means cattle in Malay, and the name is no accident — from the 1850s this was Singapore's cattle district, where traders from Calcutta ran cattle yards and dairies that fed the whole island. The herds are long gone, but the street names remember them: Lembu (cattle), Kerbau (buffalo), Desker (the butcher). Today the open space has a different kind of life — on Sundays it fills with the area's Bangladeshi and Indian migrant workers, meeting friends, sharing food and calling home. It is still what it has always been: the neighbourhood's common ground.",
+    lat: 1.30880,
+    lng: 103.85560,
+    x: 88,
+    y: 62,
+    facts: [
+      { label: "\"Lembu\" means", value: "Cattle (Malay)" },
+      { label: "Cattle trade", value: "1850s–1920s" },
+    ],
+    puzzle: {
+      question: "What does \"Lembu\" — the road this open space sits on — mean in Malay?",
+      options: ["Rice", "Cattle", "River", "Market"],
+      correctIndex: 1,
+      hint: "The district once supplied the whole island with beef and milk.",
     },
   },
 ];
@@ -183,30 +216,29 @@ export interface DemoSlot {
 }
 
 export const DEMOS: DemoSlot[] = [
-  { id: "d1", stopId: 1, title: "Hardware Craft", vendor: "Jalan Besar Hardware Co.", start: "10:00", end: "11:30" },
-  { id: "d2", stopId: 3, title: "Claypot Craft", vendor: "Sin Heng Claypot", start: "12:00", end: "13:00" },
-  { id: "d3", stopId: 4, title: "Traditional Block Printing", vendor: "Textile Heritage Centre", start: "14:00", end: "16:00" },
-  { id: "d4", stopId: 2, title: "Roti Making", vendor: "Bakers of Jalan Besar", start: "15:30", end: "16:30" },
-  { id: "d5", stopId: 5, title: "Stadium Tour", vendor: "Jalan Besar FC", start: "17:00", end: "18:00" },
+  { id: "d1", stopId: 1, title: "Live food preparation by local hawkers", vendor: "Berseh Food Centre hawkers", start: "10:00", end: "11:30" },
+  { id: "d2", stopId: 2, title: "Henna art demonstrations", vendor: "Syed Alwi henna artists", start: "12:00", end: "13:00" },
   {
     id: "d-sinhin",
-    stopId: 5,
-    title: "Traditional Coffee Roasting",
+    stopId: 3,
+    title: "Traditional coffee roasting by Sin Hin & Co",
     vendor: "Sin Hin & Co.",
     location: "109 Desker Road",
-    start: "08:30",
-    end: "16:30",
+    start: "14:00",
+    end: "16:00",
     detail: {
       heading: "Sin Hin & Co.",
       subheading: "Traditional coffee roasting · 109 Desker Road",
       body:
         "There's no sign worth noticing at No. 109. That's the point — Sin Hin sells to kopitiams, not to you. For over thirty years, this family firm has processed coffee beans on Desker Road, weekday mornings, weekends off, while the street changed around it.",
       rows: [
-        { label: "When to visit", value: "Mon–Fri, 8:30am–4:30pm" },
+        { label: "Demo slot", value: "Daily, 2:00–4:00pm" },
         { label: "What you'll see", value: "green beans going in, a caramelised block coming out" },
       ],
     },
   },
+  { id: "d5", stopId: 5, title: "Mural painting & floor art", vendor: "Lembu Road community artists", start: "16:30", end: "18:00" },
+  { id: "d4", stopId: 4, title: "Cultural dance performances & Light Show", vendor: "New World Gate heritage stage", start: "19:30", end: "21:00" },
 ];
 
 export type DemoState = "live" | "soon" | "upcoming" | "ended";
@@ -301,8 +333,8 @@ export interface Reward {
 export const REWARDS: Reward[] = [
   { id: "kopi-01", business: "Berseh Kopi Uncle", offer: "1-for-1 kopi + kaya toast", code: "JALAN-KOPI", requiredStops: 1 },
   { id: "textile-01", business: "Syed Alwi Textile Co.", offer: "15% off any fabric", code: "JALAN-CLOTH", requiredStops: 3 },
-  { id: "brass-01", business: "Tyrwhitt Hardware", offer: "Free engraved key tag", code: "JALAN-BRASS", requiredStops: 4 },
-  { id: "stadium-01", business: "Jalan Besar FC Shop", offer: "20% off merch", code: "JALAN-LIONS", requiredStops: 5 },
+  { id: "desker-01", business: "Desker Road Hardware", offer: "Free engraved key tag", code: "JALAN-BRASS", requiredStops: 4 },
+  { id: "world-01", business: "City Square Mall", offer: "$5 heritage trail voucher", code: "JALAN-WORLD", requiredStops: 5 },
 ];
 
 export function computeBadges(visitedStopIds: number[]): string[] {

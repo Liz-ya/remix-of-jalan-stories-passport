@@ -3,7 +3,7 @@ import { MapPin, Sparkles, Award, Compass, Users, Ticket } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { AnimatedTrail } from "@/components/animated-trail";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { STOPS } from "@/lib/trail-data";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -21,34 +21,63 @@ export const Route = createFileRoute("/")({
 
 const PARTNERS = ["URA", "NHB", "STB", "SLA", "CDC", "NAC"];
 
+// The landing page assumes the visitor arrived by scanning the QR code at
+// the New World Gate, City Square Mall stop — its heritage story comes first.
+const ENTRY_STOP = STOPS.find((s) => s.name === "New World Gate, City Square Mall") ?? STOPS[3];
+
 function Landing() {
+  const stop = ENTRY_STOP;
   return (
     <div className="min-h-screen bg-hero bg-tile">
       <SiteHeader />
 
-      {/* Hero */}
+      {/* Heritage story of the stop you just scanned */}
       <section className="relative overflow-hidden">
-        <div className="mx-auto max-w-6xl px-6 pt-20 pb-28 md:pt-28 md:pb-36">
+        <div className="mx-auto max-w-6xl px-6 pt-16 pb-28 md:pt-20 md:pb-36">
           <div className="max-w-3xl">
             <div className="inline-flex animate-fade-up items-center gap-2 rounded-full border border-gold/40 bg-secondary/5 px-3 py-1 text-xs text-gold">
               <Sparkles className="h-3.5 w-3.5" />
-              A living heritage experience · Singapore
+              Jalan Stories · You are at Stop {stop.id}
             </div>
             <h1 className="mt-6 animate-fade-up font-serif text-hero text-cream">
-              Jalan <span className="text-gold">Stories</span> —
+              {stop.name.replace(", City Square Mall", "")}
               <br />
-              Discover the Soul of{" "}
-              <span className="italic text-sand">Jalan Besar</span>
+              <span className="italic text-sand" style={{ fontSize: "0.55em" }}>City Square Mall · {stop.theme}</span>
             </h1>
             <p
               className="mt-6 max-w-prose animate-fade-up text-body text-muted-foreground"
               style={{ animationDelay: "120ms" }}
             >
-              Five stops around Jalan Besar. Walk them in any order, watch the
-              neighbourhood's craftspeople at work, answer a question you can
-              only answer by standing there, and collect a stamp at each one.
+              {stop.description}
             </p>
 
+            {stop.facts && stop.facts.length > 0 && (
+              <div className="mt-6 grid max-w-md animate-fade-up grid-cols-2 gap-3" style={{ animationDelay: "180ms" }}>
+                {stop.facts.map((f) => (
+                  <div key={f.label} className="rounded-lg border border-gold/25 bg-black/30 p-3">
+                    <div className="text-[10px] uppercase tracking-[0.2em] text-gold">{f.label}</div>
+                    <div className="mt-1 font-serif text-cream">{f.value}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {stop.highlights && (
+              <div className="mt-6 max-w-2xl animate-fade-up rounded-lg border border-gold/20 bg-black/30 p-5" style={{ animationDelay: "200ms" }}>
+                <div className="mb-3 border-b border-gold/20 pb-2">
+                  <div className="text-[10px] uppercase tracking-[0.3em] text-rust">{stop.highlights.subheading}</div>
+                  <div className="font-serif text-xl text-gold">{stop.highlights.heading}</div>
+                </div>
+                <div className="space-y-3">
+                  {stop.highlights.blocks.map((b) => (
+                    <div key={b.title}>
+                      <div className="font-serif text-sm text-cream">{b.title}</div>
+                      <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{b.body}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             <div
               className="mt-10 grid animate-fade-up gap-4 md:grid-cols-3"

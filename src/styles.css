@@ -41,7 +41,7 @@
   --color-sand: var(--sand);
   --color-surface: var(--surface);
 
-  --font-serif: Georgia, "Cormorant Garamond", "Times New Roman", serif;
+  --font-serif: "Playfair Display", Georgia, "Times New Roman", serif;
   --font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
 }
 
@@ -84,6 +84,7 @@
                    linear-gradient(180deg, oklch(0.18 0.04 265), oklch(0.14 0.03 265));
   --gradient-gold: linear-gradient(135deg, oklch(0.77 0.14 82), oklch(0.68 0.15 60));
   --gradient-rust: linear-gradient(135deg, oklch(0.52 0.17 30), oklch(0.42 0.16 25));
+  --gradient-teal: linear-gradient(135deg, oklch(0.52 0.08 210), oklch(0.42 0.09 220));
 
   /* Fluid type scale — used site-wide; never override with raw px. */
   --text-hero:  clamp(1.75rem, 6vw + 0.5rem, 3.5rem);
@@ -100,6 +101,22 @@
 @layer base {
   * {
     border-color: var(--color-border);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  ::selection {
+    background: oklch(0.77 0.14 82 / 0.35);
+    color: var(--cream);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
   }
 
   html, body {
@@ -151,6 +168,62 @@
 @utility pr-safe { padding-right: env(safe-area-inset-right); }
 @utility min-h-dvh { min-height: 100dvh; }
 @utility h-dvh { height: 100dvh; }
+
+/* Primary call-to-action button — one look everywhere (puzzle, trail sheet). */
+@utility btn-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  min-height: 52px;
+  border-radius: var(--radius-md);
+  background: var(--gradient-rust);
+  color: var(--cream);
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  box-shadow: 0 10px 30px -12px oklch(0.52 0.17 30 / 0.65);
+  transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.08);
+    box-shadow: 0 14px 34px -12px oklch(0.52 0.17 30 / 0.75);
+  }
+  &:active {
+    transform: translateY(0) scale(0.99);
+  }
+  &:disabled {
+    opacity: 0.5;
+    transform: none;
+    filter: none;
+  }
+}
+
+/* Teal variant for the AR experience button. */
+@utility btn-ar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  min-height: 48px;
+  border-radius: var(--radius-md);
+  background: var(--gradient-teal);
+  color: var(--cream);
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  box-shadow: 0 10px 30px -14px oklch(0.52 0.08 210 / 0.7);
+  transition: transform 0.2s ease, filter 0.2s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.1);
+  }
+  &:active {
+    transform: translateY(0) scale(0.99);
+  }
+}
 
 /* Utilities */
 @utility bg-hero {
@@ -229,7 +302,7 @@
   border-radius: 9999px;
   background: #C0392B;
   color: #fff;
-  font-family: Georgia, serif;
+  font-family: "Playfair Display", Georgia, serif;
   font-weight: 700;
   border: 3px solid #D4A017;
   box-shadow: 0 4px 16px rgba(0,0,0,0.45), 0 0 0 4px rgba(212,160,23,0.15);
