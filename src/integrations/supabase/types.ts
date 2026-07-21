@@ -101,6 +101,33 @@ export type Database = {
         }
         Relationships: []
       }
+      visitor_progress: {
+        Row: {
+          completed_at: string
+          created_at: string
+          demo_attended: boolean
+          id: string
+          stop_id: number
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string
+          created_at?: string
+          demo_attended?: boolean
+          id?: string
+          stop_id: number
+          user_id: string
+        }
+        Update: {
+          completed_at?: string
+          created_at?: string
+          demo_attended?: boolean
+          id?: string
+          stop_id?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Ticket } from "lucide-react";
+import { enableDemoMode, isDemoMode } from "@/lib/demo-mode";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -27,10 +28,20 @@ function AuthPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    if (isDemoMode()) {
+      navigate({ to: "/trail" });
+      return;
+    }
     supabase.auth.getUser().then(({ data }) => {
       if (data.user) navigate({ to: "/stamp" });
     });
   }, [navigate]);
+
+  function handleDemoMode() {
+    enableDemoMode();
+    toast.success("Demo mode enabled — enjoy the trail!");
+    navigate({ to: "/trail" });
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -120,6 +131,18 @@ function AuthPage() {
             >
               {mode === "signin" ? "Create one" : "Sign in"}
             </button>
+          </div>
+
+          <div className="mt-8 border-t border-gold/30 pt-6 text-center">
+            <p className="mb-3 text-[11px] italic text-gold">For presentation purposes only</p>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleDemoMode}
+              className="w-full border-gold/40 bg-transparent text-gold hover:bg-gold/10"
+            >
+              Enter as Demo Visitor
+            </Button>
           </div>
         </Card>
       </div>
