@@ -1,15 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { MapPin, QrCode, CheckCircle2, Lock, Sparkles } from "lucide-react";
+import { MapPin, CheckCircle2, Sparkles } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { STOPS, getDemoStatus, type Stop } from "@/lib/trail-data";
 import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
 import type { User } from "@supabase/supabase-js";
 import { LeafletTrailMap } from "@/components/leaflet-trail-map";
 import { DemoScheduleBoard } from "@/components/demo-schedule-board";
@@ -26,7 +23,6 @@ export const Route = createFileRoute("/trail")({
 
 function TrailPage() {
   const [selected, setSelected] = useState<Stop | null>(null);
-  const [qrOpen, setQrOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [visits, setVisits] = useState<Set<number>>(new Set());
 
@@ -46,25 +42,6 @@ function TrailPage() {
       .select("stop_id")
       .then(({ data }) => setVisits(new Set((data ?? []).map((r) => r.stop_id))));
   }, [user]);
-
-  async function markVisited(stopId: number) {
-    if (!user) {
-      toast.error("Sign in to record your progress", {
-        action: { label: "Sign in", onClick: () => (window.location.href = "/auth") },
-      });
-      return;
-    }
-    const { error } = await supabase
-      .from("user_stop_visits")
-      .insert({ user_id: user.id, stop_id: stopId });
-    if (error && !error.message.toLowerCase().includes("duplicate")) {
-      toast.error(error.message);
-      return;
-    }
-    setVisits((prev) => new Set(prev).add(stopId));
-    toast.success("Stamp added to your stamp!");
-    setQrOpen(false);
-  }
 
   return (
     <div className="min-h-dvh bg-hero bg-tile pb-safe">
