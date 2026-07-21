@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { MapPin, CheckCircle2, Sparkles } from "lucide-react";
+import { MapPin, CheckCircle2 } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
