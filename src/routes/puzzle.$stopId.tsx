@@ -99,17 +99,14 @@ function PuzzlePage() {
 
         {/* SECTION 1: HERITAGE INFO */}
         <section className="mt-6">
-          <span className="inline-flex items-center rounded-full bg-[#C0392B] px-3 py-1 text-xs font-semibold text-white">
+          <span className="inline-flex items-center rounded-full bg-rust-gradient px-3 py-1 text-xs font-semibold text-cream">
             Stop {stop.id}
           </span>
-          <h1
-            className="mt-3 font-bold text-cream"
-            style={{ fontFamily: "Georgia, serif", fontSize: "28px", lineHeight: 1.15 }}
-          >
+          <h1 className="mt-3 font-serif text-h3 font-bold text-cream">
             {stop.name}
           </h1>
-          <p className="mt-1 italic text-gold" style={{ fontSize: "14px" }}>{stop.theme}</p>
-          <p className="mt-4 leading-relaxed text-cream/90" style={{ fontSize: "16px", lineHeight: 1.6 }}>
+          <p className="mt-1 text-small italic text-gold">{stop.theme}</p>
+          <p className="mt-4 text-body leading-relaxed text-cream/90">
             {stop.description}
           </p>
 
@@ -136,7 +133,7 @@ function PuzzlePage() {
 
         {/* SECTION 5: QUESTION */}
         <section ref={puzzleRef} className="mt-10">
-          <h2 style={{ fontFamily: "Georgia, serif", color: "#C0392B", fontWeight: 700, fontSize: "18px" }}>
+          <h2 className="font-serif text-lg font-bold text-rust">
             Heritage Challenge
           </h2>
           {lock.kind === "loading" && (
@@ -154,22 +151,14 @@ function PuzzlePage() {
         {/* Only primary CTA — scrolls to puzzle, or sends guests to sign in */}
         {lock.kind === "unlocked" && (
           <div className="mt-8">
-            <button
-              onClick={scrollToPuzzle}
-              className="w-full rounded-md text-white transition-opacity hover:opacity-90"
-              style={{ height: "52px", background: "#C0392B", fontFamily: "Georgia, serif", fontSize: "16px" }}
-            >
+            <button onClick={scrollToPuzzle} className="btn-cta">
               Answer the Question →
             </button>
           </div>
         )}
         {lock.kind === "guest" && (
           <div className="mt-8">
-            <Link
-              to="/auth"
-              className="flex w-full items-center justify-center rounded-md text-white transition-opacity hover:opacity-90"
-              style={{ height: "52px", background: "#C0392B", fontFamily: "Georgia, serif", fontSize: "16px" }}
-            >
+            <Link to="/auth" className="btn-cta">
               Answer the Question →
             </Link>
           </div>
@@ -185,14 +174,10 @@ function ArSection() {
   const [open, setOpen] = useState(false);
   return (
     <section className="mt-10">
-      <h2 className="italic text-gold" style={{ fontFamily: "Georgia, serif", fontSize: "16px" }}>
+      <h2 className="font-serif italic text-gold">
         Experience in AR
       </h2>
-      <button
-        onClick={() => setOpen(true)}
-        className="mt-3 flex w-full items-center justify-center gap-2 rounded-md text-cream hover:opacity-90"
-        style={{ height: "48px", background: "#1B6B7A", fontFamily: "Georgia, serif", fontSize: "16px" }}
-      >
+      <button onClick={() => setOpen(true)} className="btn-ar mt-3">
         <Camera className="h-4 w-4" /> Activate AR View
       </button>
       <p className="mt-2 text-xs text-muted-foreground">
@@ -308,7 +293,7 @@ function MapSection({ stop, nextMinutes, nextName }: { stop: { lat: number; lng:
 
   return (
     <section className="mt-10">
-      <h2 className="italic text-gold" style={{ fontFamily: "Georgia, serif", fontSize: "16px" }}>
+      <h2 className="font-serif italic text-gold">
         You are here
       </h2>
       <div ref={ref} className="mt-3 w-full overflow-hidden rounded-xl border border-gold/20" style={{ height: "220px", zIndex: 0 }} />
@@ -351,7 +336,7 @@ function LiveDemoSection({ stopId, demoMode }: { stopId: number; demoMode: boole
 
   return (
     <section className="mt-10">
-      <h2 className="italic text-gold" style={{ fontFamily: "Georgia, serif", fontSize: "16px" }}>
+      <h2 className="font-serif italic text-gold">
         Live Now at This Stop
       </h2>
       <div className="mt-3 rounded-xl border border-gold/30 bg-black/40 p-4">
@@ -451,7 +436,7 @@ function UnlockedPuzzle({ stop, expired, demoMode }: { stop: typeof STOPS[number
           Your previous completion has expired. Complete again to earn rewards.
         </div>
       )}
-      <p className="text-cream" style={{ fontSize: "18px", lineHeight: 1.5 }}>{stop.puzzle.question}</p>
+      <p className="font-serif text-lg leading-snug text-cream">{stop.puzzle.question}</p>
 
       <AnimatePresence>
         {status === "correct" ? (
@@ -475,23 +460,19 @@ function UnlockedPuzzle({ stop, expired, demoMode }: { stop: typeof STOPS[number
                 <button
                   key={i}
                   onClick={() => setSelected(i)}
-                  className="w-full rounded-md px-4 text-left text-cream transition-colors"
+                  className="w-full rounded-md px-4 text-left text-cream transition-all duration-200"
                   style={{
-                    height: "52px",
+                    minHeight: "52px",
                     background: isSel ? "rgba(212,160,23,0.22)" : "rgba(255,255,255,0.08)",
                     border: isSel ? "1px solid rgba(212,160,23,0.9)" : "1px solid rgba(212,160,23,0.3)",
+                    boxShadow: isSel ? "0 6px 20px -10px rgba(212,160,23,0.6)" : "none",
                   }}
                 >
                   {opt}
                 </button>
               );
             })}
-            <button
-              onClick={submit}
-              disabled={selected == null}
-              className="mt-2 w-full rounded-md text-white disabled:opacity-50"
-              style={{ height: "52px", background: "#C0392B", fontFamily: "Georgia, serif", fontSize: "16px" }}
-            >
+            <button onClick={submit} disabled={selected == null} className="btn-cta mt-2">
               Submit Answer
             </button>
             {status === "wrong" && (

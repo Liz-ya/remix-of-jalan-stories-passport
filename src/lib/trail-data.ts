@@ -237,8 +237,8 @@ export const DEMOS: DemoSlot[] = [
       ],
     },
   },
-  { id: "d4", stopId: 4, title: "Cultural dance performances & Light Show", vendor: "New World Gate heritage stage", start: "15:30", end: "16:30" },
-  { id: "d5", stopId: 5, title: "Mural painting & floor art", vendor: "Lembu Road community artists", start: "17:00", end: "18:00" },
+  { id: "d5", stopId: 5, title: "Mural painting & floor art", vendor: "Lembu Road community artists", start: "16:30", end: "18:00" },
+  { id: "d4", stopId: 4, title: "Cultural dance performances & Light Show", vendor: "New World Gate heritage stage", start: "19:30", end: "21:00" },
 ];
 
 export type DemoState = "live" | "soon" | "upcoming" | "ended";

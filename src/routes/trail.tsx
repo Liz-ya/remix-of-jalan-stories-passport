@@ -127,8 +127,7 @@ function TrailPage() {
                 <Link
                   to="/puzzle/$stopId"
                   params={{ stopId: String(selected.id) }}
-                  className="flex w-full items-center justify-center rounded-md text-white hover:opacity-90"
-                  style={{ height: "52px", background: "#C0392B", fontFamily: "Georgia, serif", fontSize: "16px" }}
+                  className="btn-cta"
                 >
                   Answer the Question →
                 </Link>
