@@ -10,18 +10,26 @@ import {
 import { Radio, Clock, MapPin } from "lucide-react";
 
 const STATE_META: Record<DemoState, { label: string; dot: string; badge: string }> = {
-  live: { label: "Live Now", dot: "🔴", badge: "border-red-500/60 bg-red-500/15 text-red-300" },
+  live: {
+    label: "Live Now",
+    dot: "bg-red-400 animate-pulse",
+    badge: "border-red-500/60 bg-red-500/15 text-red-300",
+  },
   soon: {
     label: "Starting Soon",
-    dot: "🟡",
+    dot: "bg-yellow-300",
     badge: "border-yellow-500/60 bg-yellow-500/15 text-yellow-200",
   },
   upcoming: {
     label: "Upcoming",
-    dot: "🟢",
+    dot: "bg-emerald-300",
     badge: "border-emerald-500/60 bg-emerald-500/15 text-emerald-200",
   },
-  ended: { label: "Ended", dot: "⚫", badge: "border-white/20 bg-white/5 text-muted-foreground" },
+  ended: {
+    label: "Ended",
+    dot: "bg-white/30",
+    badge: "border-white/20 bg-white/5 text-muted-foreground",
+  },
 };
 
 export function DemoScheduleBoard() {
@@ -36,7 +44,7 @@ export function DemoScheduleBoard() {
   const demos = sortedDemos(now);
 
   return (
-    <div className="rounded-2xl border-4 border-double border-gold/40 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.04),transparent_60%),linear-gradient(180deg,#0e2422,#071312)] p-6 shadow-deep">
+    <div className="rounded-3xl border border-gold/25 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.04),transparent_60%),linear-gradient(180deg,#0e2422,#071312)] p-6 shadow-deep md:p-8">
       <div className="mb-5 flex items-end justify-between border-b border-gold/20 pb-4">
         <div>
           <p className="font-serif text-[10px] uppercase tracking-[0.4em] text-rust">
@@ -66,16 +74,16 @@ export function DemoScheduleBoard() {
           return (
             <li
               key={d.id}
-              className={`group flex flex-col gap-3 rounded-lg border border-white/5 bg-black/30 p-4 transition sm:flex-row sm:items-center sm:justify-between ${
-                d.info.state === "ended" ? "opacity-50" : "hover:border-gold/30"
+              className={`group flex flex-col gap-3 rounded-xl border border-white/5 bg-black/30 p-4 sm:flex-row sm:items-center sm:justify-between ${
+                d.info.state === "ended" ? "opacity-50" : "card-hover hover:border-gold/30"
               }`}
             >
               <div className="flex-1">
                 <div className="flex flex-wrap items-center gap-2">
                   <span
-                    className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] uppercase tracking-widest ${meta.badge}`}
+                    className={`inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[10px] uppercase tracking-widest ${meta.badge}`}
                   >
-                    <span>{meta.dot}</span> {meta.label}
+                    <span className={`h-1.5 w-1.5 rounded-full ${meta.dot}`} /> {meta.label}
                   </span>
                   <span className="font-mono text-xs text-gold/80">
                     {formatTimeRange(d.start, d.end)}

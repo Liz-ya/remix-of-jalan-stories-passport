@@ -11,6 +11,7 @@ import {
   formatCountdown,
 } from "@/lib/trail-data";
 import { SiteHeader } from "@/components/site-header";
+import { StopPhoto } from "@/components/stop-photo";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { MapPin, CheckCircle2, Sparkles, Lock } from "lucide-react";
@@ -122,12 +123,18 @@ function PuzzlePage() {
           </span>
           <h1 className="mt-3 font-serif text-h3 font-bold text-cream">{stop.name}</h1>
           <p className="mt-1 text-small italic text-gold">{stop.theme}</p>
+
+          {stop.image && <StopPhoto image={stop.image} className="mt-5" />}
+
           <p className="mt-4 text-body leading-relaxed text-cream/90">{stop.description}</p>
 
           {stop.facts && stop.facts.length > 0 && (
             <div className="mt-5 grid grid-cols-2 gap-3">
               {stop.facts.map((f) => (
-                <div key={f.label} className="rounded-lg border border-gold/25 bg-black/30 p-3">
+                <div
+                  key={f.label}
+                  className="card-hover rounded-xl border border-gold/25 bg-black/30 p-3"
+                >
                   <div className="text-[10px] uppercase tracking-[0.2em] text-gold">{f.label}</div>
                   <div className="mt-1 font-serif text-cream">{f.value}</div>
                 </div>
