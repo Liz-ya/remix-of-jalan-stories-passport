@@ -13,7 +13,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Five stops around Jalan Besar. Walk them in any order, watch craftspeople at work, answer a question at each stop, and collect a stamp.",
+          "PROID Project",
       },
     ],
   }),

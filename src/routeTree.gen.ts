@@ -9,22 +9,21 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TrailRouteImport } from './routes/trail'
-import { Route as PassportRouteImport } from './routes/passport'
-import { Route as AuthRouteImport } from './routes/auth'
-import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as PuzzleStopIdRouteImport } from './routes/puzzle.$stopId'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as PassportRouteImport } from './routes/passport'
+import { Route as TrailRouteImport } from './routes/trail'
 import { Route as AuthenticatedStampRouteImport } from './routes/_authenticated/stamp'
+import { Route as PuzzleStopIdRouteImport } from './routes/puzzle.$stopId'
 
-const TrailRoute = TrailRouteImport.update({
-  id: '/trail',
-  path: '/trail',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PassportRoute = PassportRouteImport.update({
-  id: '/passport',
-  path: '/passport',
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -32,24 +31,25 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
-  id: '/_authenticated',
+const PassportRoute = PassportRouteImport.update({
+  id: '/passport',
+  path: '/passport',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PuzzleStopIdRoute = PuzzleStopIdRouteImport.update({
-  id: '/puzzle/$stopId',
-  path: '/puzzle/$stopId',
+const TrailRoute = TrailRouteImport.update({
+  id: '/trail',
+  path: '/trail',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedStampRoute = AuthenticatedStampRouteImport.update({
   id: '/stamp',
   path: '/stamp',
   getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const PuzzleStopIdRoute = PuzzleStopIdRouteImport.update({
+  id: '/puzzle/$stopId',
+  path: '/puzzle/$stopId',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -81,12 +81,7 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/'
-    | '/auth'
-    | '/passport'
-    | '/trail'
-    | '/stamp'
-    | '/puzzle/$stopId'
+    '/' | '/auth' | '/passport' | '/trail' | '/stamp' | '/puzzle/$stopId'
   fileRoutesByTo: FileRoutesByTo
   to: '/' | '/auth' | '/passport' | '/trail' | '/stamp' | '/puzzle/$stopId'
   id:
@@ -111,25 +106,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/trail': {
-      id: '/trail'
-      path: '/trail'
-      fullPath: '/trail'
-      preLoaderRoute: typeof TrailRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/passport': {
-      id: '/passport'
-      path: '/passport'
-      fullPath: '/passport'
-      preLoaderRoute: typeof PassportRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -139,18 +120,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/puzzle/$stopId': {
-      id: '/puzzle/$stopId'
-      path: '/puzzle/$stopId'
-      fullPath: '/puzzle/$stopId'
-      preLoaderRoute: typeof PuzzleStopIdRouteImport
+    '/passport': {
+      id: '/passport'
+      path: '/passport'
+      fullPath: '/passport'
+      preLoaderRoute: typeof PassportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/trail': {
+      id: '/trail'
+      path: '/trail'
+      fullPath: '/trail'
+      preLoaderRoute: typeof TrailRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/stamp': {
@@ -159,6 +147,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/stamp'
       preLoaderRoute: typeof AuthenticatedStampRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/puzzle/$stopId': {
+      id: '/puzzle/$stopId'
+      path: '/puzzle/$stopId'
+      fullPath: '/puzzle/$stopId'
+      preLoaderRoute: typeof PuzzleStopIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
   }
 }
@@ -185,13 +180,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

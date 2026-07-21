@@ -93,27 +93,27 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "description",
         content:
-          "Self-guided heritage trail, live demos and a digital stamp through Singapore's Jalan Besar.",
+          "PROID Project",
       },
       {
         property: "og:description",
         content:
-          "Self-guided heritage trail, live demos and a digital stamp through Singapore's Jalan Besar.",
+          "PROID Project",
       },
       {
         name: "twitter:description",
         content:
-          "Self-guided heritage trail, live demos and a digital stamp through Singapore's Jalan Besar.",
+          "PROID Project",
       },
       {
         property: "og:image",
         content:
-          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/dbba3056-997a-40d1-9d43-62fcd6f91fb2/id-preview-d1d38cf8--e811a224-c979-431f-905b-a2a900874d79.lovable.app-1783406777657.png",
+          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/b085082b-89e3-4bf0-b165-9d1bead0a9d5",
       },
       {
         name: "twitter:image",
         content:
-          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/dbba3056-997a-40d1-9d43-62fcd6f91fb2/id-preview-d1d38cf8--e811a224-c979-431f-905b-a2a900874d79.lovable.app-1783406777657.png",
+          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/b085082b-89e3-4bf0-b165-9d1bead0a9d5",
       },
     ],
     links: [
