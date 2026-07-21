@@ -467,7 +467,7 @@ function UnlockedPuzzle({ stop, expired, demoMode }: { stop: typeof STOPS[number
             {status === "wrong" && (
               <p className="mt-1 text-sm text-rust">Not quite — try again</p>
             )}
-            {wrongCount >= 2 && status !== "correct" && (
+            {wrongCount >= 2 && (
               <p className="mt-1 rounded-md border border-gold/30 bg-black/30 p-3 text-xs text-sand">
                 <span className="text-gold">Hint:</span> {stop.puzzle.hint}
               </p>
