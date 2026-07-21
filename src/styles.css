@@ -6,7 +6,8 @@
 
 /*
  * Jalan Stories — heritage shophouse design system.
- * Warm rust red, gold, deep navy, cream. Dark by default.
+ * Warm rust red, gold, deep espresso brown, cream — lantern-lit night
+ * at New World. Dark by default.
  */
 
 @theme inline {
@@ -49,15 +50,15 @@
   --radius: 0.5rem;
 
   /* Brand */
-  --rust: oklch(0.52 0.17 30);       /* #C0392B */
-  --gold: oklch(0.77 0.14 82);       /* #D4A017 */
-  --teal: oklch(0.52 0.08 210);      /* #1B6B7A */
+  --rust: oklch(0.54 0.17 32);       /* warm lantern red */
+  --gold: oklch(0.78 0.14 82);       /* aged brass gold */
+  --teal: oklch(0.52 0.08 210);      /* jade accent */
   --cream: oklch(0.96 0.03 85);      /* #FDF6E3 */
   --sand: oklch(0.86 0.06 80);       /* #E8D5B0 */
-  --surface: oklch(0.24 0.05 265);   /* #16213E */
+  --surface: oklch(0.25 0.035 55);   /* warm chestnut */
 
   /* Semantic — dark by default */
-  --background: oklch(0.18 0.04 265);          /* #1A1A2E */
+  --background: oklch(0.18 0.028 50);          /* deep espresso */
   --foreground: var(--cream);
   --card: var(--surface);
   --card-foreground: var(--cream);
@@ -66,8 +67,8 @@
   --primary: var(--rust);
   --primary-foreground: var(--cream);
   --secondary: var(--gold);
-  --secondary-foreground: oklch(0.18 0.04 265);
-  --muted: oklch(0.28 0.04 265);
+  --secondary-foreground: oklch(0.18 0.028 50);
+  --muted: oklch(0.29 0.032 55);
   --muted-foreground: var(--sand);
   --accent: var(--teal);
   --accent-foreground: var(--cream);
@@ -79,12 +80,11 @@
 
   --shadow-gold: 0 8px 32px -8px oklch(0.77 0.14 82 / 0.35);
   --shadow-deep: 0 20px 60px -20px oklch(0 0 0 / 0.5);
-  --gradient-hero: radial-gradient(ellipse at 30% 20%, oklch(0.52 0.17 30 / 0.25), transparent 60%),
-                   radial-gradient(ellipse at 70% 80%, oklch(0.52 0.08 210 / 0.2), transparent 60%),
-                   linear-gradient(180deg, oklch(0.18 0.04 265), oklch(0.14 0.03 265));
-  --gradient-gold: linear-gradient(135deg, oklch(0.77 0.14 82), oklch(0.68 0.15 60));
-  --gradient-rust: linear-gradient(135deg, oklch(0.52 0.17 30), oklch(0.42 0.16 25));
-  --gradient-teal: linear-gradient(135deg, oklch(0.52 0.08 210), oklch(0.42 0.09 220));
+  --gradient-hero: radial-gradient(ellipse at 30% 20%, oklch(0.54 0.17 32 / 0.28), transparent 60%),
+                   radial-gradient(ellipse at 70% 80%, oklch(0.78 0.14 82 / 0.14), transparent 60%),
+                   linear-gradient(180deg, oklch(0.18 0.028 50), oklch(0.13 0.024 45));
+  --gradient-gold: linear-gradient(135deg, oklch(0.78 0.14 82), oklch(0.68 0.15 60));
+  --gradient-rust: linear-gradient(135deg, oklch(0.54 0.17 32), oklch(0.43 0.16 27));
 
   /* Fluid type scale — used site-wide; never override with raw px. */
   --text-hero:  clamp(1.75rem, 6vw + 0.5rem, 3.5rem);
@@ -200,31 +200,6 @@
   }
 }
 
-/* Teal variant for the AR experience button. */
-@utility btn-ar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  width: 100%;
-  min-height: 48px;
-  border-radius: var(--radius-md);
-  background: var(--gradient-teal);
-  color: var(--cream);
-  font-family: var(--font-serif);
-  font-size: 1rem;
-  box-shadow: 0 10px 30px -14px oklch(0.52 0.08 210 / 0.7);
-  transition: transform 0.2s ease, filter 0.2s ease;
-
-  &:hover {
-    transform: translateY(-1px);
-    filter: brightness(1.1);
-  }
-  &:active {
-    transform: translateY(0) scale(0.99);
-  }
-}
-
 /* Utilities */
 @utility bg-hero {
   background: var(--gradient-hero);
@@ -311,5 +286,5 @@
   background: linear-gradient(135deg, #D4A017, #B8860B);
   color: #1A1A2E;
 }
-.leaflet-container { background: #16213E; font-family: inherit; }
+.leaflet-container { background: #251a10; font-family: inherit; }
 .leaflet-control-attribution { font-size: 10px !important; }
