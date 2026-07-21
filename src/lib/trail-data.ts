@@ -17,6 +17,13 @@ export interface PuzzleQuestion {
   hint: string;
 }
 
+export interface StopImage {
+  src: string;
+  alt: string;
+  credit: string;
+  creditUrl: string;
+}
+
 export interface Stop {
   id: number;
   name: string;
@@ -28,8 +35,20 @@ export interface Stop {
   x: number;
   y: number;
   facts?: Array<{ label: string; value: string }>;
+  image?: StopImage;
   puzzle: PuzzleQuestion;
   highlights?: StopHighlights;
+}
+
+// Freely licensed location photos, hotlinked from Wikimedia Commons.
+// Special:FilePath serves a resized copy and redirects to the file CDN.
+function commonsImage(file: string, alt: string): StopImage {
+  return {
+    src: `https://commons.wikimedia.org/wiki/Special:FilePath/${file}?width=1200`,
+    alt,
+    credit: "Wikimedia Commons",
+    creditUrl: `https://commons.wikimedia.org/wiki/File:${file}`,
+  };
 }
 
 export const STOPS: Stop[] = [
@@ -48,6 +67,10 @@ export const STOPS: Stop[] = [
       { label: "Opened", value: "1985" },
       { label: "Original stalls", value: "Some 3rd generation" },
     ],
+    image: commonsImage(
+      "Jalan_Besar.JPG",
+      "Shophouses along Jalan Besar, home of Berseh Food Centre",
+    ),
     puzzle: {
       question: "Berseh Food Centre was built in the 1980s to rehouse whom?",
       options: [
@@ -75,6 +98,10 @@ export const STOPS: Stop[] = [
       { label: "Fabric trade since", value: "1930s" },
       { label: "Mustafa opened", value: "1971" },
     ],
+    image: commonsImage(
+      "Mustafa_Centre,_Little_India,_Singapore_(9005264972).jpg",
+      "Mustafa Centre on Syed Alwi Road",
+    ),
     puzzle: {
       question: "What has the street outside Mustafa primarily traded in for nearly a century?",
       options: ["Spices", "Textiles and fabric", "Gold jewellery", "Timber"],
@@ -97,6 +124,7 @@ export const STOPS: Stop[] = [
       { label: "Named after", value: "A. F. Desker, 1860s" },
       { label: "Today", value: "Little Bangladesh" },
     ],
+    image: commonsImage("Desker_Road,_Singapore,_2023_(01).jpg", "Shophouses along Desker Road"),
     puzzle: {
       question:
         "Desker Road takes its name from Andre Filipe Desker. What business made him famous?",
@@ -149,6 +177,10 @@ export const STOPS: Stop[] = [
       { label: "Closed", value: "April 1987" },
       { label: "Gate rebuilt", value: "January 2011" },
     ],
+    image: commonsImage(
+      "New_World_Gateway%E2%80%94Singapore.jpg",
+      "The reconstructed New World gate at City Square",
+    ),
     puzzle: {
       question: "The historic gate outside City Square Mall once welcomed visitors to what?",
       options: [
@@ -202,6 +234,7 @@ export const STOPS: Stop[] = [
       { label: '"Lembu" means', value: "Cattle (Malay)" },
       { label: "Cattle trade", value: "1850s–1920s" },
     ],
+    image: commonsImage("Lembu_Road,_Singapore,_2023_(01).jpg", "Lembu Road, off Jalan Besar"),
     puzzle: {
       question: 'What does "Lembu" — the road this open space sits on — mean in Malay?',
       options: ["Rice", "Cattle", "River", "Market"],

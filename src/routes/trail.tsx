@@ -16,6 +16,7 @@ import { supabase } from "@/integrations/supabase/client";
 import type { User } from "@supabase/supabase-js";
 import { LeafletTrailMap } from "@/components/leaflet-trail-map";
 import { DemoScheduleBoard } from "@/components/demo-schedule-board";
+import { StopPhoto } from "@/components/stop-photo";
 
 export const Route = createFileRoute("/trail")({
   head: () => ({
@@ -117,6 +118,8 @@ function TrailPage() {
               </SheetHeader>
 
               <div className="mt-4 space-y-5 pb-6">
+                {selected.image && <StopPhoto image={selected.image} />}
+
                 <p className="text-sm leading-relaxed text-muted-foreground">
                   {selected.description}
                 </p>
@@ -185,7 +188,7 @@ function StopListCard({
   visited: boolean;
 }) {
   return (
-    <Card className="border-white/10 bg-card/70 p-6">
+    <Card className="card-hover rounded-2xl border-white/10 bg-card/70 p-6">
       <div className="flex items-start justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-gold">

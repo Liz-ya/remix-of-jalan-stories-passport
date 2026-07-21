@@ -47,7 +47,7 @@
 }
 
 :root {
-  --radius: 0.5rem;
+  --radius: 0.75rem;
 
   /* Brand */
   --rust: oklch(0.56 0.17 30);       /* lantern red */
@@ -168,6 +168,23 @@
 @utility pr-safe { padding-right: env(safe-area-inset-right); }
 @utility min-h-dvh { min-height: 100dvh; }
 @utility h-dvh { height: 100dvh; }
+
+/* Card hover — the subtle grow-on-hover cue used across all boxes/cards.
+   Skipped entirely for users who prefer reduced motion. */
+@utility card-hover {
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s ease,
+    border-color 0.35s ease;
+  will-change: transform;
+
+  @media (prefers-reduced-motion: no-preference) {
+    &:hover {
+      transform: scale(1.02) translateY(-2px);
+      box-shadow: var(--shadow-deep);
+    }
+  }
+}
 
 /* Primary call-to-action button — one look everywhere (puzzle, trail sheet). */
 @utility btn-cta {

@@ -3,6 +3,7 @@ import { MapPin, Sparkles, Award, Compass, Users, Ticket } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { AnimatedTrail } from "@/components/animated-trail";
 import { Card } from "@/components/ui/card";
+import { StopPhoto } from "@/components/stop-photo";
 import { STOPS } from "@/lib/trail-data";
 
 export const Route = createFileRoute("/")({
@@ -46,6 +47,12 @@ function Landing() {
                 City Square Mall · {stop.theme}
               </span>
             </h1>
+            {stop.image && (
+              <div className="mt-6 max-w-2xl animate-fade-up" style={{ animationDelay: "100ms" }}>
+                <StopPhoto image={stop.image} />
+              </div>
+            )}
+
             <p
               className="mt-6 max-w-prose animate-fade-up text-body text-muted-foreground"
               style={{ animationDelay: "120ms" }}
@@ -59,7 +66,10 @@ function Landing() {
                 style={{ animationDelay: "180ms" }}
               >
                 {stop.facts.map((f) => (
-                  <div key={f.label} className="rounded-lg border border-gold/25 bg-black/30 p-3">
+                  <div
+                    key={f.label}
+                    className="card-hover rounded-xl border border-gold/25 bg-black/30 p-3"
+                  >
                     <div className="text-[10px] uppercase tracking-[0.2em] text-gold">
                       {f.label}
                     </div>
@@ -185,7 +195,7 @@ function Landing() {
           </div>
           <Link
             to="/trail"
-            className="group flex items-center gap-4 rounded-xl border border-white/10 bg-card/60 p-4 transition hover:border-gold/40"
+            className="card-hover group flex items-center gap-4 rounded-2xl border border-white/10 bg-card/60 p-4 hover:border-gold/40"
           >
             <div className="h-16 w-24 overflow-hidden rounded-md bg-background">
               <AnimatedTrail className="h-full w-full" />
@@ -226,7 +236,7 @@ function CtaCard({
   return (
     <Link to={to} className="group block">
       <Card
-        className={`relative overflow-hidden border bg-gradient-to-br ${accentClass} p-5 transition duration-300 group-hover:-translate-y-1 shadow-deep`}
+        className={`card-hover relative overflow-hidden rounded-2xl border bg-gradient-to-br ${accentClass} p-5 shadow-deep`}
       >
         <div className="mb-5 inline-flex h-10 w-10 items-center justify-center rounded-full bg-background/60 text-gold">
           {icon}
@@ -243,7 +253,7 @@ function CtaCard({
 
 function Feature({ icon, title, body }: { icon: React.ReactNode; title: string; body: string }) {
   return (
-    <Card className="border-white/10 bg-card/70 p-8 backdrop-blur transition hover:border-gold/30">
+    <Card className="card-hover rounded-2xl border-white/10 bg-card/70 p-8 backdrop-blur hover:border-gold/30">
       <div className="mb-5 inline-flex h-11 w-11 items-center justify-center rounded-full border border-gold/30 text-gold">
         {icon}
       </div>
