@@ -132,6 +132,18 @@ function AuthPage() {
               {mode === "signin" ? "Create one" : "Sign in"}
             </button>
           </div>
+
+          <div className="mt-8 border-t border-gold/30 pt-6 text-center">
+            <p className="mb-3 text-[11px] italic text-gold">For presentation purposes only</p>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleDemoMode}
+              className="w-full border-gold/40 bg-transparent text-gold hover:bg-gold/10"
+            >
+              Enter as Demo Visitor
+            </Button>
+          </div>
         </Card>
       </div>
     </div>
