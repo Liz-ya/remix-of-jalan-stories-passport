@@ -42,7 +42,9 @@ function Landing() {
             <h1 className="mt-6 animate-fade-up font-serif text-hero text-cream">
               {stop.name.replace(", City Square Mall", "")}
               <br />
-              <span className="italic text-sand" style={{ fontSize: "0.55em" }}>City Square Mall · {stop.theme}</span>
+              <span className="italic text-sand" style={{ fontSize: "0.55em" }}>
+                City Square Mall · {stop.theme}
+              </span>
             </h1>
             <p
               className="mt-6 max-w-prose animate-fade-up text-body text-muted-foreground"
@@ -52,10 +54,15 @@ function Landing() {
             </p>
 
             {stop.facts && stop.facts.length > 0 && (
-              <div className="mt-6 grid max-w-md animate-fade-up grid-cols-2 gap-3" style={{ animationDelay: "180ms" }}>
+              <div
+                className="mt-6 grid max-w-md animate-fade-up grid-cols-2 gap-3"
+                style={{ animationDelay: "180ms" }}
+              >
                 {stop.facts.map((f) => (
                   <div key={f.label} className="rounded-lg border border-gold/25 bg-black/30 p-3">
-                    <div className="text-[10px] uppercase tracking-[0.2em] text-gold">{f.label}</div>
+                    <div className="text-[10px] uppercase tracking-[0.2em] text-gold">
+                      {f.label}
+                    </div>
                     <div className="mt-1 font-serif text-cream">{f.value}</div>
                   </div>
                 ))}
@@ -63,9 +70,14 @@ function Landing() {
             )}
 
             {stop.highlights && (
-              <div className="mt-6 max-w-2xl animate-fade-up rounded-lg border border-gold/20 bg-black/30 p-5" style={{ animationDelay: "200ms" }}>
+              <div
+                className="mt-6 max-w-2xl animate-fade-up rounded-lg border border-gold/20 bg-black/30 p-5"
+                style={{ animationDelay: "200ms" }}
+              >
                 <div className="mb-3 border-b border-gold/20 pb-2">
-                  <div className="text-[10px] uppercase tracking-[0.3em] text-rust">{stop.highlights.subheading}</div>
+                  <div className="text-[10px] uppercase tracking-[0.3em] text-rust">
+                    {stop.highlights.subheading}
+                  </div>
                   <div className="font-serif text-xl text-gold">{stop.highlights.heading}</div>
                 </div>
                 <div className="space-y-3">
@@ -104,7 +116,6 @@ function Landing() {
                 sub="Collect stamps & rewards"
                 accent="gold"
               />
-
             </div>
           </div>
         </div>
@@ -230,15 +241,7 @@ function CtaCard({
   );
 }
 
-function Feature({
-  icon,
-  title,
-  body,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  body: string;
-}) {
+function Feature({ icon, title, body }: { icon: React.ReactNode; title: string; body: string }) {
   return (
     <Card className="border-white/10 bg-card/70 p-8 backdrop-blur transition hover:border-gold/30">
       <div className="mb-5 inline-flex h-11 w-11 items-center justify-center rounded-full border border-gold/30 text-gold">

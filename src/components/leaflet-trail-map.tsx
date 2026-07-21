@@ -37,14 +37,20 @@ const INITIAL_COMPASS: CompassState = {
   hasCompass: false,
 };
 
-function toRad(d: number) { return (d * Math.PI) / 180; }
-function toDeg(r: number) { return (r * 180) / Math.PI; }
+function toRad(d: number) {
+  return (d * Math.PI) / 180;
+}
+function toDeg(r: number) {
+  return (r * 180) / Math.PI;
+}
 
 function haversine(lat1: number, lng1: number, lat2: number, lng2: number) {
   const R = 6371000;
   const dLat = toRad(lat2 - lat1);
   const dLng = toRad(lng2 - lng1);
-  const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) ** 2;
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) ** 2;
   return 2 * R * Math.asin(Math.sqrt(a));
 }
 
@@ -80,14 +86,11 @@ export function LeafletTrailMap({ onSelect, visits, targetStop, suppressed, clas
       });
       mapRef.current = map;
 
-      L.tileLayer(
-        "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
-        {
-          maxZoom: 20,
-          attribution:
-            '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-        },
-      ).addTo(map);
+      L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
+        maxZoom: 20,
+        attribution:
+          '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+      }).addTo(map);
 
       L.control.zoom({ position: "bottomright" }).addTo(map);
 
@@ -108,7 +111,9 @@ export function LeafletTrailMap({ onSelect, visits, targetStop, suppressed, clas
         const m = L.marker([stop.lat, stop.lng], { icon })
           .addTo(map)
           .on("click", () => onSelect(stop))
-          .bindPopup(`<strong>${stop.id}. ${stop.name}</strong><br/><span style="font-size:11px;color:#666">${stop.location}</span>`);
+          .bindPopup(
+            `<strong>${stop.id}. ${stop.name}</strong><br/><span style="font-size:11px;color:#666">${stop.location}</span>`,
+          );
         markersRef.current.push(m);
       });
 
@@ -116,7 +121,6 @@ export function LeafletTrailMap({ onSelect, visits, targetStop, suppressed, clas
       const bounds = L.latLngBounds(STOPS.map((s) => [s.lat, s.lng] as [number, number]));
       map.fitBounds(bounds, { padding: [40, 40] });
     })();
-
 
     return () => {
       cancelled = true;
@@ -154,7 +158,10 @@ export function LeafletTrailMap({ onSelect, visits, targetStop, suppressed, clas
     let bestD = Infinity;
     for (const s of STOPS) {
       const d = haversine(lat, lng, s.lat, s.lng);
-      if (d < bestD) { bestD = d; best = s; }
+      if (d < bestD) {
+        bestD = d;
+        best = s;
+      }
     }
     return best;
   }
@@ -165,8 +172,14 @@ export function LeafletTrailMap({ onSelect, visits, targetStop, suppressed, clas
       watchIdRef.current = null;
     }
     if (orientationHandlerRef.current) {
-      window.removeEventListener("deviceorientationabsolute", orientationHandlerRef.current as EventListener);
-      window.removeEventListener("deviceorientation", orientationHandlerRef.current as EventListener);
+      window.removeEventListener(
+        "deviceorientationabsolute",
+        orientationHandlerRef.current as EventListener,
+      );
+      window.removeEventListener(
+        "deviceorientation",
+        orientationHandlerRef.current as EventListener,
+      );
       orientationHandlerRef.current = null;
     }
     smoothedHeadingRef.current = null;
@@ -182,7 +195,11 @@ export function LeafletTrailMap({ onSelect, visits, targetStop, suppressed, clas
 
   async function locateMe() {
     if (!navigator.geolocation) {
-      setCompass({ ...INITIAL_COMPASS, active: true, error: "Geolocation is not supported on this device." });
+      setCompass({
+        ...INITIAL_COMPASS,
+        active: true,
+        error: "Geolocation is not supported on this device.",
+      });
       return;
     }
     setLocating(true);
@@ -190,7 +207,9 @@ export function LeafletTrailMap({ onSelect, visits, targetStop, suppressed, clas
     // Ask for orientation permission INSIDE the tap handler (iOS requirement).
     let hasCompass = false;
     type IOSOrientation = { requestPermission?: () => Promise<"granted" | "denied"> };
-    const DOE = (typeof DeviceOrientationEvent !== "undefined" ? DeviceOrientationEvent : null) as (typeof DeviceOrientationEvent & IOSOrientation) | null;
+    const DOE = (typeof DeviceOrientationEvent !== "undefined" ? DeviceOrientationEvent : null) as
+      | (typeof DeviceOrientationEvent & IOSOrientation)
+      | null;
     try {
       if (DOE && typeof DOE.requestPermission === "function") {
         const res = await DOE.requestPermission();
@@ -277,7 +296,7 @@ export function LeafletTrailMap({ onSelect, visits, targetStop, suppressed, clas
   const rotation =
     compass.bearing != null && compass.heading != null
       ? compass.bearing - compass.heading
-      : compass.bearing ?? 0;
+      : (compass.bearing ?? 0);
 
   return (
     <div className={"relative " + (className ?? "")} style={{ zIndex: 0 }}>
@@ -329,7 +348,11 @@ export function LeafletTrailMap({ onSelect, visits, targetStop, suppressed, clas
                     />
                   ) : compass.bearing != null ? (
                     <div className="text-center text-[10px] leading-tight text-sand/90">
-                      <div>Compass<br />unavailable</div>
+                      <div>
+                        Compass
+                        <br />
+                        unavailable
+                      </div>
                       <div className="mt-1 text-gold">{Math.round(compass.bearing)}° from N</div>
                     </div>
                   ) : (
@@ -348,7 +371,9 @@ export function LeafletTrailMap({ onSelect, visits, targetStop, suppressed, clas
                         <div className="text-xs text-cream">You've arrived 🎉</div>
                       ) : (
                         <div className="text-xs text-muted-foreground">
-                          {compass.hasCompass ? "Follow the arrow" : "Head toward the bearing shown"}
+                          {compass.hasCompass
+                            ? "Follow the arrow"
+                            : "Head toward the bearing shown"}
                         </div>
                       )}
                     </>

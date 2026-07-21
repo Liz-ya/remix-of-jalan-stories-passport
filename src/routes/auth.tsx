@@ -61,7 +61,6 @@ function AuthPage() {
         toast.success("Welcome back!");
       }
       navigate({ to: "/stamp" });
-
     } catch (err: unknown) {
       toast.error(err instanceof Error ? err.message : "Something went wrong");
     } finally {
@@ -81,15 +80,18 @@ function AuthPage() {
             <div>
               <div className="font-serif text-xl text-cream">Claim your stamp</div>
               <div className="text-xs text-muted-foreground">
-                {mode === "signin" ? "Welcome back to Jalan Stories" : "Create your traveller account"}
+                {mode === "signin"
+                  ? "Welcome back to Jalan Stories"
+                  : "Create your traveller account"}
               </div>
             </div>
           </div>
 
-
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <Label htmlFor="email" className="text-sand">Email</Label>
+              <Label htmlFor="email" className="text-sand">
+                Email
+              </Label>
               <Input
                 id="email"
                 type="email"
@@ -101,7 +103,9 @@ function AuthPage() {
               />
             </div>
             <div>
-              <Label htmlFor="password" className="text-sand">Password</Label>
+              <Label htmlFor="password" className="text-sand">
+                Password
+              </Label>
               <Input
                 id="password"
                 type="password"

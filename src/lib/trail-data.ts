@@ -40,8 +40,8 @@ export const STOPS: Stop[] = [
     location: "166 Jalan Besar",
     description:
       "Berseh Food Centre is where the neighbourhood actually eats. Opened in 1985 to rehouse street hawkers who used to trade along the roadside, it now holds third-generation stalls making kway chap, chicken rice and Hokkien mee the way the grandfather made it — no queues of tourists, no reinvented menus. Several of the current stall owners started here as children, watching their parents render pork lard at 5 a.m. The recipes have not been written down; they are simply repeated. Come for breakfast, and you'll sit next to retirees who have been ordering the same plate every morning for twenty years.",
-    lat: 1.30790,
-    lng: 103.85760,
+    lat: 1.3079,
+    lng: 103.8576,
     x: 12,
     y: 68,
     facts: [
@@ -67,8 +67,8 @@ export const STOPS: Stop[] = [
     location: "Syed Alwi Road, by Mustafa Centre",
     description:
       "Syed Alwi Road is where sari silk sits next to Malay tailors sits next to Chinese haberdashers, all selling cloth by the yard and none in the same language. Since the 1930s this stretch has been Singapore's fabric market — bolts of chiffon, brocade and cotton stacked to the ceiling, prices called out in three tongues and sealed with a nod. In 1971 a small garment shop called Mustafa opened here; it never stopped growing, and never stopped opening, becoming the 24-hour mall that now anchors the street. Bridal families still come to pick sari fabric, henna artists still work the five-foot ways, and the shopkeepers still remember which grandmother preferred which supplier.",
-    lat: 1.30960,
-    lng: 103.85500,
+    lat: 1.3096,
+    lng: 103.855,
     x: 32,
     y: 40,
     facts: [
@@ -90,7 +90,7 @@ export const STOPS: Stop[] = [
     description:
       "Desker Road is named after Andre Filipe Desker, a Malacca-born Eurasian who ran the largest slaughterhouse in colonial Singapore — this was the butcher's street of the 1860s, supplying the whole town with meat from the cattle yards next door. The two rows of shophouses have since lived several lives: trades, lodgings, and now the heart of Singapore's Bangladeshi community, who call the stretch the Mini Mart. Walk it slowly — behind an unmarked shopfront at No. 109, a family firm has been roasting coffee for kopitiams for over thirty years, while the street changed around it.",
     lat: 1.30935,
-    lng: 103.85420,
+    lng: 103.8542,
     x: 52,
     y: 58,
     facts: [
@@ -98,7 +98,8 @@ export const STOPS: Stop[] = [
       { label: "Today", value: "Little Bangladesh" },
     ],
     puzzle: {
-      question: "Desker Road takes its name from Andre Filipe Desker. What business made him famous?",
+      question:
+        "Desker Road takes its name from Andre Filipe Desker. What business made him famous?",
       options: [
         "Textile weaving",
         "Butchery and slaughterhouses",
@@ -112,11 +113,23 @@ export const STOPS: Stop[] = [
       heading: "Desker Road",
       subheading: "Five lives of one street",
       blocks: [
-        { title: "1860s — The butcher's street", body: "Named after Andre Filipe Desker, a Malacca-born Eurasian who ran the largest slaughterhouse in colonial Singapore." },
-        { title: "The cattle years", body: "Grass and water made this area Singapore's cattle district from the 1850s. Lembu Road next door means \"cattle\" in Malay." },
-        { title: "Today — Little Bangladesh", body: "The stretch is now the heart of Singapore's Bangladeshi community, who call it the Mini Mart." },
+        {
+          title: "1860s — The butcher's street",
+          body: "Named after Andre Filipe Desker, a Malacca-born Eurasian who ran the largest slaughterhouse in colonial Singapore.",
+        },
+        {
+          title: "The cattle years",
+          body: 'Grass and water made this area Singapore\'s cattle district from the 1850s. Lembu Road next door means "cattle" in Malay.',
+        },
+        {
+          title: "Today — Little Bangladesh",
+          body: "The stretch is now the heart of Singapore's Bangladeshi community, who call it the Mini Mart.",
+        },
       ],
-      footer: { text: "And at No. 109, behind an unmarked shopfront, coffee has been roasting through it all.", linkDemoId: "d-sinhin" },
+      footer: {
+        text: "And at No. 109, behind an unmarked shopfront, coffee has been roasting through it all.",
+        linkDemoId: "d-sinhin",
+      },
     },
   },
   {
@@ -126,8 +139,8 @@ export const STOPS: Stop[] = [
     location: "City Square Mall, Kitchener Road",
     description:
       "The gate you just scanned once swallowed thousands of people a night. This was New World — Singapore's first amusement park, opened in 1923 by Straits Chinese brothers Ong Boon Tat and Ong Peng Hock, and the original of the three great \"Worlds\" that Great World and Gay World later copied. Packed into 45,000 square feet along Jalan Besar were rides, carousels, open-air cinemas, boxing and wrestling arenas, dance halls and no fewer than five opera stages. You could spend a whole day inside: family photo, haircut at the barber, hawker dinner, a stroll in the park — and never see it all. The park is gone, but its gate still stands where you do now: the only physical remnant of Singapore's first playground.",
-    lat: 1.31130,
-    lng: 103.85630,
+    lat: 1.3113,
+    lng: 103.8563,
     x: 72,
     y: 34,
     facts: [
@@ -145,7 +158,7 @@ export const STOPS: Stop[] = [
         "A cinema hall",
       ],
       correctIndex: 1,
-      hint: "Opera stages, cabaret dance halls and wrestling arenas — Singapore's first great \"World\".",
+      hint: 'Opera stages, cabaret dance halls and wrestling arenas — Singapore\'s first great "World".',
     },
     highlights: {
       heading: "New World Gate",
@@ -153,7 +166,7 @@ export const STOPS: Stop[] = [
       blocks: [
         {
           title: "1923 — The Ong brothers open the gates",
-          body: "Ong Boon Tat and Ong Peng Hock, sons of businessman Ong Sam Leong, opened New World as the first of the three \"Worlds\" — Great World (early 1930s) and Gay World (1936) followed. It sprawled across about 45,000 sq ft along Jalan Besar.",
+          body: 'Ong Boon Tat and Ong Peng Hock, sons of businessman Ong Sam Leong, opened New World as the first of the three "Worlds" — Great World (early 1930s) and Gay World (1936) followed. It sprawled across about 45,000 sq ft along Jalan Besar.',
         },
         {
           title: "Five opera stages under one roof",
@@ -161,11 +174,11 @@ export const STOPS: Stop[] = [
         },
         {
           title: "Names on the marquee",
-          body: "Wrestler King Kong (Hungarian Emile Czaya), strongman Mat Tarzan, boxer Felix Boy — and Rose Chan, the 1950s \"Queen of Strip\", who also wrestled pythons and bent iron bars. In 1949 Madame Tai Fong's Fong Fong Revue drew crowds so large the colonial police warned that \"this monkey business must cease.\"",
+          body: 'Wrestler King Kong (Hungarian Emile Czaya), strongman Mat Tarzan, boxer Felix Boy — and Rose Chan, the 1950s "Queen of Strip", who also wrestled pythons and bent iron bars. In 1949 Madame Tai Fong\'s Fong Fong Revue drew crowds so large the colonial police warned that "this monkey business must cease."',
         },
         {
           title: "The part nobody puts on a poster",
-          body: "The cabaret \"lancing girls\" — three dance coupons for as little as a dollar — were philanthropists too. The Singapore Dance Hostesses' Association raised $13,000 for the Nanyang University building fund in 1953, and Rose Chan gave to charities for children, the elderly, TB patients and the blind.",
+          body: 'The cabaret "lancing girls" — three dance coupons for as little as a dollar — were philanthropists too. The Singapore Dance Hostesses\' Association raised $13,000 for the Nanyang University building fund in 1953, and Rose Chan gave to charities for children, the elderly, TB patients and the blind.',
         },
         {
           title: "1987 — Lights out, gate stays",
@@ -181,23 +194,22 @@ export const STOPS: Stop[] = [
     location: "Lembu Road, off Jalan Besar",
     description:
       "\"Lembu\" means cattle in Malay, and the name is no accident — from the 1850s this was Singapore's cattle district, where traders from Calcutta ran cattle yards and dairies that fed the whole island. The herds are long gone, but the street names remember them: Lembu (cattle), Kerbau (buffalo), Desker (the butcher). Today the open space has a different kind of life — on Sundays it fills with the area's Bangladeshi and Indian migrant workers, meeting friends, sharing food and calling home. It is still what it has always been: the neighbourhood's common ground.",
-    lat: 1.30880,
-    lng: 103.85560,
+    lat: 1.3088,
+    lng: 103.8556,
     x: 88,
     y: 62,
     facts: [
-      { label: "\"Lembu\" means", value: "Cattle (Malay)" },
+      { label: '"Lembu" means', value: "Cattle (Malay)" },
       { label: "Cattle trade", value: "1850s–1920s" },
     ],
     puzzle: {
-      question: "What does \"Lembu\" — the road this open space sits on — mean in Malay?",
+      question: 'What does "Lembu" — the road this open space sits on — mean in Malay?',
       options: ["Rice", "Cattle", "River", "Market"],
       correctIndex: 1,
       hint: "The district once supplied the whole island with beef and milk.",
     },
   },
 ];
-
 
 export interface DemoSlot {
   id: string;
@@ -216,8 +228,22 @@ export interface DemoSlot {
 }
 
 export const DEMOS: DemoSlot[] = [
-  { id: "d1", stopId: 1, title: "Live food preparation by local hawkers", vendor: "Berseh Food Centre hawkers", start: "10:00", end: "11:30" },
-  { id: "d2", stopId: 2, title: "Henna art demonstrations", vendor: "Syed Alwi henna artists", start: "12:00", end: "13:00" },
+  {
+    id: "d1",
+    stopId: 1,
+    title: "Live food preparation by local hawkers",
+    vendor: "Berseh Food Centre hawkers",
+    start: "10:00",
+    end: "11:30",
+  },
+  {
+    id: "d2",
+    stopId: 2,
+    title: "Henna art demonstrations",
+    vendor: "Syed Alwi henna artists",
+    start: "12:00",
+    end: "13:00",
+  },
   {
     id: "d-sinhin",
     stopId: 3,
@@ -229,16 +255,29 @@ export const DEMOS: DemoSlot[] = [
     detail: {
       heading: "Sin Hin & Co.",
       subheading: "Traditional coffee roasting · 109 Desker Road",
-      body:
-        "There's no sign worth noticing at No. 109. That's the point — Sin Hin sells to kopitiams, not to you. For over thirty years, this family firm has processed coffee beans on Desker Road, weekday mornings, weekends off, while the street changed around it.",
+      body: "There's no sign worth noticing at No. 109. That's the point — Sin Hin sells to kopitiams, not to you. For over thirty years, this family firm has processed coffee beans on Desker Road, weekday mornings, weekends off, while the street changed around it.",
       rows: [
         { label: "Demo slot", value: "Daily, 2:00–4:00pm" },
         { label: "What you'll see", value: "green beans going in, a caramelised block coming out" },
       ],
     },
   },
-  { id: "d5", stopId: 5, title: "Mural painting & floor art", vendor: "Lembu Road community artists", start: "16:30", end: "18:00" },
-  { id: "d4", stopId: 4, title: "Cultural dance performances & Light Show", vendor: "New World Gate heritage stage", start: "19:30", end: "21:00" },
+  {
+    id: "d5",
+    stopId: 5,
+    title: "Mural painting & floor art",
+    vendor: "Lembu Road community artists",
+    start: "16:30",
+    end: "18:00",
+  },
+  {
+    id: "d4",
+    stopId: 4,
+    title: "Cultural dance performances & Light Show",
+    vendor: "New World Gate heritage stage",
+    start: "19:30",
+    end: "21:00",
+  },
 ];
 
 export type DemoState = "live" | "soon" | "upcoming" | "ended";
@@ -288,7 +327,10 @@ export type DemoStatus =
   | { kind: "none" };
 
 export function getDemoStatus(stopId: number, now = new Date()): DemoStatus {
-  const list = DEMOS.filter((d) => d.stopId === stopId).map((d) => ({ d, info: getDemoStatusInfo(d, now) }));
+  const list = DEMOS.filter((d) => d.stopId === stopId).map((d) => ({
+    d,
+    info: getDemoStatusInfo(d, now),
+  }));
   const live = list.find((x) => x.info.state === "live");
   if (live) return { kind: "live", demo: live.d };
   const upcoming = list
@@ -299,7 +341,10 @@ export function getDemoStatus(stopId: number, now = new Date()): DemoStatus {
 }
 
 /** Active or next demo (live/soon/upcoming) at this stop today. */
-export function getActiveOrUpcomingDemo(stopId: number, now = new Date()): (DemoSlot & { info: DemoStatusInfo }) | null {
+export function getActiveOrUpcomingDemo(
+  stopId: number,
+  now = new Date(),
+): (DemoSlot & { info: DemoStatusInfo }) | null {
   const list = DEMOS.filter((d) => d.stopId === stopId)
     .map((d) => ({ ...d, info: getDemoStatusInfo(d, now) }))
     .filter((d) => d.info.state !== "ended")
@@ -319,7 +364,12 @@ export const BADGES: Badge[] = [
   { id: "trail-blazer", name: "Trail Blazer", description: "Discovered all 5 stops", emoji: "🔥" },
   { id: "craft-witness", name: "Craft Witness", description: "Attended a live demo", emoji: "🛠️" },
   { id: "story-keeper", name: "Story Keeper", description: "Completed all puzzles", emoji: "📜" },
-  { id: "jalan-champion", name: "Jalan Champion", description: "Full trail completion", emoji: "🏆" },
+  {
+    id: "jalan-champion",
+    name: "Jalan Champion",
+    description: "Full trail completion",
+    emoji: "🏆",
+  },
 ];
 
 export interface Reward {
@@ -331,10 +381,34 @@ export interface Reward {
 }
 
 export const REWARDS: Reward[] = [
-  { id: "kopi-01", business: "Berseh Kopi Uncle", offer: "1-for-1 kopi + kaya toast", code: "JALAN-KOPI", requiredStops: 1 },
-  { id: "textile-01", business: "Syed Alwi Textile Co.", offer: "15% off any fabric", code: "JALAN-CLOTH", requiredStops: 3 },
-  { id: "desker-01", business: "Desker Road Hardware", offer: "Free engraved key tag", code: "JALAN-BRASS", requiredStops: 4 },
-  { id: "world-01", business: "City Square Mall", offer: "$5 heritage trail voucher", code: "JALAN-WORLD", requiredStops: 5 },
+  {
+    id: "kopi-01",
+    business: "Berseh Kopi Uncle",
+    offer: "1-for-1 kopi + kaya toast",
+    code: "JALAN-KOPI",
+    requiredStops: 1,
+  },
+  {
+    id: "textile-01",
+    business: "Syed Alwi Textile Co.",
+    offer: "15% off any fabric",
+    code: "JALAN-CLOTH",
+    requiredStops: 3,
+  },
+  {
+    id: "desker-01",
+    business: "Desker Road Hardware",
+    offer: "Free engraved key tag",
+    code: "JALAN-BRASS",
+    requiredStops: 4,
+  },
+  {
+    id: "world-01",
+    business: "City Square Mall",
+    offer: "$5 heritage trail voucher",
+    code: "JALAN-WORLD",
+    requiredStops: 5,
+  },
 ];
 
 export function computeBadges(visitedStopIds: number[]): string[] {
@@ -384,7 +458,9 @@ export function walkingDistanceMeters(a: Stop, b: Stop): number {
   const toRad = (d: number) => (d * Math.PI) / 180;
   const dLat = toRad(b.lat - a.lat);
   const dLng = toRad(b.lng - a.lng);
-  const s = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(a.lat)) * Math.cos(toRad(b.lat)) * Math.sin(dLng / 2) ** 2;
+  const s =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(a.lat)) * Math.cos(toRad(b.lat)) * Math.sin(dLng / 2) ** 2;
   const straight = 2 * R * Math.asin(Math.sqrt(s));
   return straight * 1.3;
 }

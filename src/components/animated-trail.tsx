@@ -35,7 +35,14 @@ export function AnimatedTrail({ className }: Props) {
         { x: 780, y: 180 },
       ].map((p, i) => (
         <g key={i}>
-          <circle cx={p.x} cy={p.y} r="10" fill="oklch(0.24 0.05 265)" stroke="oklch(0.77 0.14 82)" strokeWidth="2" />
+          <circle
+            cx={p.x}
+            cy={p.y}
+            r="10"
+            fill="oklch(0.24 0.05 265)"
+            stroke="oklch(0.77 0.14 82)"
+            strokeWidth="2"
+          />
           <circle cx={p.x} cy={p.y} r="3" fill="oklch(0.77 0.14 82)" />
         </g>
       ))}

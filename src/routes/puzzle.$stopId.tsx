@@ -1,12 +1,20 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Map as LMap } from "leaflet";
-import { STOPS, DEMOS, getActiveOrUpcomingDemo, getNextStop, walkingMinutes, formatTimeRange, formatCountdown } from "@/lib/trail-data";
+import {
+  STOPS,
+  DEMOS,
+  getActiveOrUpcomingDemo,
+  getNextStop,
+  walkingMinutes,
+  formatTimeRange,
+  formatCountdown,
+} from "@/lib/trail-data";
 import { SiteHeader } from "@/components/site-header";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { X, Camera, MapPin, CheckCircle2, Sparkles, Lock } from "lucide-react";
-import { isDemoMode } from "@/lib/demo-mode";
+import { MapPin, CheckCircle2, Sparkles, Lock } from "lucide-react";
+import { isDemoMode, disableDemoMode } from "@/lib/demo-mode";
 import { motion, AnimatePresence } from "framer-motion";
 
 export const Route = createFileRoute("/puzzle/$stopId")({
@@ -16,7 +24,10 @@ export const Route = createFileRoute("/puzzle/$stopId")({
     return {
       meta: [
         { title: `${title} · Jalan Stories` },
-        { name: "description", content: "Explore this Jalan Besar heritage stop — story, AR view, map and question." },
+        {
+          name: "description",
+          content: "Explore this Jalan Besar heritage stop — story, map, live demo and question.",
+        },
       ],
     };
   },
@@ -34,10 +45,12 @@ function formatReturnDate(fromISO: string): string {
 type LockState =
   | { kind: "loading" }
   | { kind: "guest" } // not signed in — puzzle locked until login
+  | { kind: "demo" } // demo visitor — view-only, answering needs a real account
   | { kind: "unlocked"; expired?: boolean }
   | { kind: "locked"; completedAt: string; demoAttended: boolean };
 
 function PuzzlePage() {
+  const navigate = useNavigate();
   const { stopId } = Route.useParams();
   const sid = Number(stopId);
   const stop = STOPS.find((s) => s.id === sid);
@@ -50,7 +63,7 @@ function PuzzlePage() {
   useEffect(() => {
     if (!stop) return;
     if (demoMode) {
-      setLock({ kind: "unlocked" });
+      setLock({ kind: "demo" });
       return;
     }
     (async () => {
@@ -83,32 +96,33 @@ function PuzzlePage() {
         <SiteHeader />
         <div className="mx-auto max-w-xl px-6 py-20 text-center">
           <h1 className="font-serif text-3xl text-cream">Stop not found</h1>
-          <Link to="/trail" className="mt-4 inline-block text-gold underline">Back to trail</Link>
+          <Link to="/trail" className="mt-4 inline-block text-gold underline">
+            Back to trail
+          </Link>
         </div>
       </div>
     );
   }
 
-  const scrollToPuzzle = () => puzzleRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  const scrollToPuzzle = () =>
+    puzzleRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
 
   return (
     <div className="min-h-dvh bg-hero bg-tile pb-safe">
       <SiteHeader />
       <div className="mx-auto w-full max-w-2xl px-4 py-6 md:py-10">
-        <Link to="/trail" className="text-xs uppercase tracking-widest text-gold">← Back to trail</Link>
+        <Link to="/trail" className="text-xs uppercase tracking-widest text-gold">
+          ← Back to trail
+        </Link>
 
         {/* SECTION 1: HERITAGE INFO */}
         <section className="mt-6">
           <span className="inline-flex items-center rounded-full bg-rust-gradient px-3 py-1 text-xs font-semibold text-cream">
             Stop {stop.id}
           </span>
-          <h1 className="mt-3 font-serif text-h3 font-bold text-cream">
-            {stop.name}
-          </h1>
+          <h1 className="mt-3 font-serif text-h3 font-bold text-cream">{stop.name}</h1>
           <p className="mt-1 text-small italic text-gold">{stop.theme}</p>
-          <p className="mt-4 text-body leading-relaxed text-cream/90">
-            {stop.description}
-          </p>
+          <p className="mt-4 text-body leading-relaxed text-cream/90">{stop.description}</p>
 
           {stop.facts && stop.facts.length > 0 && (
             <div className="mt-5 grid grid-cols-2 gap-3">
@@ -122,30 +136,28 @@ function PuzzlePage() {
           )}
         </section>
 
-        {/* SECTION 2: AR VIEW */}
-        <ArSection />
-
-        {/* SECTION 3: LOCATION MAP */}
-        <MapSection stop={stop} nextMinutes={next ? walkingMinutes(stop, next) : null} nextName={next?.name ?? null} />
+        {/* SECTION 2: LOCATION MAP */}
+        <MapSection
+          stop={stop}
+          nextMinutes={next ? walkingMinutes(stop, next) : null}
+          nextName={next?.name ?? null}
+        />
 
         {/* SECTION 4: LIVE DEMO */}
         {demo && <LiveDemoSection stopId={stop.id} demoMode={demoMode} />}
 
         {/* SECTION 5: QUESTION */}
         <section ref={puzzleRef} className="mt-10">
-          <h2 className="font-serif text-lg font-bold text-rust">
-            Heritage Challenge
-          </h2>
+          <h2 className="font-serif text-lg font-bold text-rust">Heritage Challenge</h2>
           {lock.kind === "loading" && (
             <p className="mt-4 text-sm text-muted-foreground">Loading…</p>
           )}
           {lock.kind === "guest" && <GuestLockedPanel />}
+          {lock.kind === "demo" && <DemoLockedPanel />}
           {lock.kind === "locked" && (
             <LockedPanel completedAt={lock.completedAt} stopName={stop.name} />
           )}
-          {lock.kind === "unlocked" && (
-            <UnlockedPuzzle stop={stop} expired={!!lock.expired} demoMode={demoMode} />
-          )}
+          {lock.kind === "unlocked" && <UnlockedPuzzle stop={stop} expired={!!lock.expired} />}
         </section>
 
         {/* Only primary CTA — scrolls to puzzle, or sends guests to sign in */}
@@ -163,97 +175,35 @@ function PuzzlePage() {
             </Link>
           </div>
         )}
+        {lock.kind === "demo" && (
+          <div className="mt-8">
+            <button
+              onClick={() => {
+                disableDemoMode();
+                navigate({ to: "/auth" });
+              }}
+              className="btn-cta"
+            >
+              Sign in to Answer →
+            </button>
+          </div>
+        )}
       </div>
-    </div>
-  );
-}
-
-/* ─────────────── AR Section ─────────────── */
-
-function ArSection() {
-  const [open, setOpen] = useState(false);
-  return (
-    <section className="mt-10">
-      <h2 className="font-serif italic text-gold">
-        Experience in AR
-      </h2>
-      <button onClick={() => setOpen(true)} className="btn-ar mt-3">
-        <Camera className="h-4 w-4" /> Activate AR View
-      </button>
-      <p className="mt-2 text-xs text-muted-foreground">
-        Point your camera at surroundings to see heritage layers appear
-      </p>
-      {open && <ArOverlay onClose={() => setOpen(false)} />}
-    </section>
-  );
-}
-
-function ArOverlay({ onClose }: { onClose: () => void }) {
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-  const streamRef = useRef<MediaStream | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      if (!navigator.mediaDevices?.getUserMedia) {
-        setError("Camera not available on this device.");
-        return;
-      }
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: { ideal: "environment" } },
-          audio: false,
-        });
-        if (cancelled) { stream.getTracks().forEach((t) => t.stop()); return; }
-        streamRef.current = stream;
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-          videoRef.current.play().catch(() => {});
-        }
-      } catch {
-        setError("Camera permission denied.");
-      }
-    })();
-    return () => {
-      cancelled = true;
-      streamRef.current?.getTracks().forEach((t) => t.stop());
-      streamRef.current = null;
-    };
-  }, []);
-
-  return (
-    <div className="fixed inset-0 z-[9999] bg-black pt-safe pb-safe pl-safe pr-safe">
-      <video ref={videoRef} playsInline muted className="absolute inset-0 h-full w-full object-cover" />
-      <div className="absolute inset-x-0 top-0 flex items-center justify-between bg-gradient-to-b from-black/70 to-transparent p-4 pt-[max(1rem,env(safe-area-inset-top))] text-cream">
-        <button
-          onClick={onClose}
-          aria-label="Close AR"
-          className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-black/60 backdrop-blur"
-        >
-          <X className="h-5 w-5" />
-        </button>
-        <div className="text-[10px] uppercase tracking-[0.3em] text-gold">AR View</div>
-      </div>
-      <div className="pointer-events-none absolute left-1/2 top-1/2 h-56 w-56 -translate-x-1/2 -translate-y-1/2 sm:h-64 sm:w-64">
-        <div className="absolute left-0 top-0 h-10 w-10 rounded-tl-lg border-l-4 border-t-4 border-gold animate-pulse" />
-        <div className="absolute right-0 top-0 h-10 w-10 rounded-tr-lg border-r-4 border-t-4 border-gold animate-pulse" />
-        <div className="absolute bottom-0 left-0 h-10 w-10 rounded-bl-lg border-b-4 border-l-4 border-gold animate-pulse" />
-        <div className="absolute bottom-0 right-0 h-10 w-10 rounded-br-lg border-b-4 border-r-4 border-gold animate-pulse" />
-        <Sparkles className="absolute left-1/2 top-1/2 h-8 w-8 -translate-x-1/2 -translate-y-1/2 text-gold/80" />
-      </div>
-      {error && (
-        <div className="absolute inset-x-0 bottom-24 mx-auto max-w-sm rounded-lg bg-black/80 p-4 text-center text-sm text-cream">
-          {error}
-        </div>
-      )}
     </div>
   );
 }
 
 /* ─────────────── Mini Map ─────────────── */
 
-function MapSection({ stop, nextMinutes, nextName }: { stop: { lat: number; lng: number; id: number }; nextMinutes: number | null; nextName: string | null }) {
+function MapSection({
+  stop,
+  nextMinutes,
+  nextName,
+}: {
+  stop: { lat: number; lng: number; id: number };
+  nextMinutes: number | null;
+  nextName: string | null;
+}) {
   const ref = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<LMap | null>(null);
 
@@ -293,10 +243,12 @@ function MapSection({ stop, nextMinutes, nextName }: { stop: { lat: number; lng:
 
   return (
     <section className="mt-10">
-      <h2 className="font-serif italic text-gold">
-        You are here
-      </h2>
-      <div ref={ref} className="mt-3 w-full overflow-hidden rounded-xl border border-gold/20" style={{ height: "220px", zIndex: 0 }} />
+      <h2 className="font-serif italic text-gold">You are here</h2>
+      <div
+        ref={ref}
+        className="mt-3 w-full overflow-hidden rounded-xl border border-gold/20"
+        style={{ height: "220px", zIndex: 0 }}
+      />
       {nextMinutes != null && nextName && (
         <p className="mt-3 text-sm text-cream/80">
           <MapPin className="mr-1 inline h-4 w-4 text-gold" />
@@ -319,7 +271,10 @@ function LiveDemoSection({ stopId, demoMode }: { stopId: number; demoMode: boole
   }, []);
   if (!demo) return null;
   const info = demo.info;
-  const label = info.state === "live" ? `Ends in ${formatCountdown(info.msToEnd)}` : `Starts in ${formatCountdown(info.msToStart)}`;
+  const label =
+    info.state === "live"
+      ? `Ends in ${formatCountdown(info.msToEnd)}`
+      : `Starts in ${formatCountdown(info.msToStart)}`;
 
   async function mark() {
     setAttended(true);
@@ -336,17 +291,21 @@ function LiveDemoSection({ stopId, demoMode }: { stopId: number; demoMode: boole
 
   return (
     <section className="mt-10">
-      <h2 className="font-serif italic text-gold">
-        Live Now at This Stop
-      </h2>
+      <h2 className="font-serif italic text-gold">Live Now at This Stop</h2>
       <div className="mt-3 rounded-xl border border-gold/30 bg-black/40 p-4">
         <div className="flex items-center gap-2">
-          {info.state === "live" && <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-red-500" />}
-          <span className="text-[10px] uppercase tracking-[0.25em] text-gold">{info.state === "live" ? "Live" : "Upcoming"}</span>
+          {info.state === "live" && (
+            <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-red-500" />
+          )}
+          <span className="text-[10px] uppercase tracking-[0.25em] text-gold">
+            {info.state === "live" ? "Live" : "Upcoming"}
+          </span>
         </div>
         <div className="mt-1 font-serif text-lg text-cream">{demo.title}</div>
         <div className="text-sm text-muted-foreground">{demo.vendor}</div>
-        <div className="mt-1 text-xs text-sand/80">{formatTimeRange(demo.start, demo.end)} · {label}</div>
+        <div className="mt-1 text-xs text-sand/80">
+          {formatTimeRange(demo.start, demo.end)} · {label}
+        </div>
         <button
           onClick={mark}
           disabled={attended}
@@ -361,6 +320,20 @@ function LiveDemoSection({ stopId, demoMode }: { stopId: number; demoMode: boole
 }
 
 /* ─────────────── Puzzle (Unlocked / Locked) ─────────────── */
+
+function DemoLockedPanel() {
+  return (
+    <div className="mt-4 rounded-xl border border-gold/25 bg-black/40 p-5 opacity-90">
+      <div className="flex items-center gap-2 text-gold">
+        <Lock className="h-5 w-5" />
+        <span className="font-serif text-lg">Locked in demo mode</span>
+      </div>
+      <p className="mt-2 text-sm text-cream/80">
+        Demo mode is view-only. Create an account or sign in to answer questions and collect stamps.
+      </p>
+    </div>
+  );
+}
 
 function GuestLockedPanel() {
   return (
@@ -397,7 +370,7 @@ function LockedPanel({ completedAt, stopName }: { completedAt: string; stopName:
   );
 }
 
-function UnlockedPuzzle({ stop, expired, demoMode }: { stop: typeof STOPS[number]; expired: boolean; demoMode: boolean }) {
+function UnlockedPuzzle({ stop, expired }: { stop: (typeof STOPS)[number]; expired: boolean }) {
   const [selected, setSelected] = useState<number | null>(null);
   const [wrongCount, setWrongCount] = useState(0);
   const [shake, setShake] = useState(false);
@@ -408,18 +381,22 @@ function UnlockedPuzzle({ stop, expired, demoMode }: { stop: typeof STOPS[number
     if (selected === stop.puzzle.correctIndex) {
       setStatus("correct");
       toast.success("Correct! You've earned your stamp.");
-      if (!demoMode) {
-        const { data: userData } = await supabase.auth.getUser();
-        if (userData.user) {
-          await supabase.from("visitor_progress" as never).insert({
+      const { data: userData } = await supabase.auth.getUser();
+      if (userData.user) {
+        await supabase.from("visitor_progress" as never).insert({
+          user_id: userData.user.id,
+          stop_id: stop.id,
+        } as never);
+        await supabase
+          .from("user_stop_visits")
+          .insert({
             user_id: userData.user.id,
             stop_id: stop.id,
-          } as never);
-          await supabase.from("user_stop_visits").insert({
-            user_id: userData.user.id,
-            stop_id: stop.id,
-          }).then(() => {}, () => {});
-        }
+          })
+          .then(
+            () => {},
+            () => {},
+          );
       }
     } else {
       setStatus("wrong");
@@ -464,7 +441,9 @@ function UnlockedPuzzle({ stop, expired, demoMode }: { stop: typeof STOPS[number
                   style={{
                     minHeight: "52px",
                     background: isSel ? "rgba(212,160,23,0.22)" : "rgba(255,255,255,0.08)",
-                    border: isSel ? "1px solid rgba(212,160,23,0.9)" : "1px solid rgba(212,160,23,0.3)",
+                    border: isSel
+                      ? "1px solid rgba(212,160,23,0.9)"
+                      : "1px solid rgba(212,160,23,0.3)",
                     boxShadow: isSel ? "0 6px 20px -10px rgba(212,160,23,0.6)" : "none",
                   }}
                 >
@@ -475,9 +454,7 @@ function UnlockedPuzzle({ stop, expired, demoMode }: { stop: typeof STOPS[number
             <button onClick={submit} disabled={selected == null} className="btn-cta mt-2">
               Submit Answer
             </button>
-            {status === "wrong" && (
-              <p className="mt-1 text-sm text-rust">Not quite — try again</p>
-            )}
+            {status === "wrong" && <p className="mt-1 text-sm text-rust">Not quite — try again</p>}
             {wrongCount >= 2 && (
               <p className="mt-1 rounded-md border border-gold/30 bg-black/30 p-3 text-xs text-sand">
                 <span className="text-gold">Hint:</span> {stop.puzzle.hint}

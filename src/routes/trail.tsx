@@ -4,7 +4,13 @@ import { MapPin, CheckCircle2 } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+} from "@/components/ui/sheet";
 import { STOPS, getDemoStatus, type Stop } from "@/lib/trail-data";
 import { supabase } from "@/integrations/supabase/client";
 import type { User } from "@supabase/supabase-js";
@@ -15,7 +21,10 @@ export const Route = createFileRoute("/trail")({
   head: () => ({
     meta: [
       { title: "The Trail · Jalan Stories" },
-      { name: "description", content: "Interactive Leaflet map of five heritage stops across Jalan Besar, Singapore." },
+      {
+        name: "description",
+        content: "Interactive Leaflet map of five heritage stops across Jalan Besar, Singapore.",
+      },
     ],
   }),
   component: TrailPage,
@@ -50,9 +59,12 @@ function TrailPage() {
       <div className="mx-auto w-full max-w-6xl px-4 py-6 md:px-6 md:py-10">
         <div className="mb-6">
           <p className="text-xs uppercase tracking-[0.2em] text-gold">The Trail</p>
-          <h1 className="mt-2 font-serif text-3xl text-cream md:text-5xl">Five stops. Any order.</h1>
+          <h1 className="mt-2 font-serif text-3xl text-cream md:text-5xl">
+            Five stops. Any order.
+          </h1>
           <p className="mt-2 max-w-xl text-sm text-muted-foreground md:text-base">
-            Tap a marker to see what's there. When you arrive, open the stop and answer the question in front of you.
+            Tap a marker to see what's there. When you arrive, open the stop and answer the question
+            in front of you.
           </p>
         </div>
 
@@ -73,7 +85,12 @@ function TrailPage() {
         {/* Stop list */}
         <section className="mt-10 grid gap-4 md:grid-cols-2">
           {STOPS.map((s) => (
-            <StopListCard key={s.id} stop={s} onOpen={() => setSelected(s)} visited={visits.has(s.id)} />
+            <StopListCard
+              key={s.id}
+              stop={s}
+              onOpen={() => setSelected(s)}
+              visited={visits.has(s.id)}
+            />
           ))}
         </section>
       </div>
@@ -91,26 +108,36 @@ function TrailPage() {
                   <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-gold-gradient text-xs font-bold text-background">
                     {selected.id}
                   </span>
-                  <span className="text-xs uppercase tracking-widest text-gold">{selected.theme}</span>
+                  <span className="text-xs uppercase tracking-widest text-gold">
+                    {selected.theme}
+                  </span>
                 </div>
                 <SheetTitle className="font-serif text-2xl text-cream">{selected.name}</SheetTitle>
                 <SheetDescription className="text-sand/80">{selected.location}</SheetDescription>
               </SheetHeader>
 
               <div className="mt-4 space-y-5 pb-6">
-                <p className="text-sm leading-relaxed text-muted-foreground">{selected.description}</p>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  {selected.description}
+                </p>
 
                 {selected.highlights && (
                   <div className="rounded-lg border border-gold/20 bg-black/30 p-4">
                     <div className="mb-3 border-b border-gold/20 pb-2">
-                      <div className="text-[10px] uppercase tracking-[0.3em] text-rust">{selected.highlights.subheading}</div>
-                      <div className="font-serif text-xl text-gold">{selected.highlights.heading}</div>
+                      <div className="text-[10px] uppercase tracking-[0.3em] text-rust">
+                        {selected.highlights.subheading}
+                      </div>
+                      <div className="font-serif text-xl text-gold">
+                        {selected.highlights.heading}
+                      </div>
                     </div>
                     <div className="space-y-3">
                       {selected.highlights.blocks.map((b) => (
                         <div key={b.title}>
                           <div className="font-serif text-sm text-cream">{b.title}</div>
-                          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{b.body}</p>
+                          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                            {b.body}
+                          </p>
                         </div>
                       ))}
                     </div>
@@ -133,7 +160,10 @@ function TrailPage() {
                 </Link>
                 {!user && (
                   <p className="text-center text-xs text-muted-foreground">
-                    <Link to="/auth" className="text-gold underline">Sign in</Link> to save your progress.
+                    <Link to="/auth" className="text-gold underline">
+                      Sign in
+                    </Link>{" "}
+                    to save your progress.
                   </p>
                 )}
               </div>
@@ -145,7 +175,15 @@ function TrailPage() {
   );
 }
 
-function StopListCard({ stop, onOpen, visited }: { stop: Stop; onOpen: () => void; visited: boolean }) {
+function StopListCard({
+  stop,
+  onOpen,
+  visited,
+}: {
+  stop: Stop;
+  onOpen: () => void;
+  visited: boolean;
+}) {
   return (
     <Card className="border-white/10 bg-card/70 p-6">
       <div className="flex items-start justify-between gap-4">
