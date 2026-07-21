@@ -5,7 +5,7 @@ import { STOPS, DEMOS, getActiveOrUpcomingDemo, getNextStop, walkingMinutes, for
 import { SiteHeader } from "@/components/site-header";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { X, Camera, MapPin, CheckCircle2, Sparkles } from "lucide-react";
+import { X, Camera, MapPin, CheckCircle2, Sparkles, Lock } from "lucide-react";
 import { isDemoMode } from "@/lib/demo-mode";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -33,6 +33,7 @@ function formatReturnDate(fromISO: string): string {
 
 type LockState =
   | { kind: "loading" }
+  | { kind: "guest" } // not signed in — puzzle locked until login
   | { kind: "unlocked"; expired?: boolean }
   | { kind: "locked"; completedAt: string; demoAttended: boolean };
 
@@ -55,7 +56,7 @@ function PuzzlePage() {
     (async () => {
       const { data: userData } = await supabase.auth.getUser();
       if (!userData.user) {
-        setLock({ kind: "unlocked" });
+        setLock({ kind: "guest" });
         return;
       }
       const { data } = await supabase
@@ -141,6 +142,7 @@ function PuzzlePage() {
           {lock.kind === "loading" && (
             <p className="mt-4 text-sm text-muted-foreground">Loading…</p>
           )}
+          {lock.kind === "guest" && <GuestLockedPanel />}
           {lock.kind === "locked" && (
             <LockedPanel completedAt={lock.completedAt} stopName={stop.name} />
           )}
@@ -149,7 +151,7 @@ function PuzzlePage() {
           )}
         </section>
 
-        {/* Only primary CTA — reveals/scrolls to puzzle */}
+        {/* Only primary CTA — scrolls to puzzle, or sends guests to sign in */}
         {lock.kind === "unlocked" && (
           <div className="mt-8">
             <button
@@ -159,6 +161,17 @@ function PuzzlePage() {
             >
               Answer the Question →
             </button>
+          </div>
+        )}
+        {lock.kind === "guest" && (
+          <div className="mt-8">
+            <Link
+              to="/auth"
+              className="flex w-full items-center justify-center rounded-md text-white transition-opacity hover:opacity-90"
+              style={{ height: "52px", background: "#C0392B", fontFamily: "Georgia, serif", fontSize: "16px" }}
+            >
+              Answer the Question →
+            </Link>
           </div>
         )}
       </div>
@@ -363,6 +376,23 @@ function LiveDemoSection({ stopId, demoMode }: { stopId: number; demoMode: boole
 }
 
 /* ─────────────── Puzzle (Unlocked / Locked) ─────────────── */
+
+function GuestLockedPanel() {
+  return (
+    <div className="mt-4 rounded-xl border border-gold/25 bg-black/40 p-5 opacity-90">
+      <div className="flex items-center gap-2 text-gold">
+        <Lock className="h-5 w-5" />
+        <span className="font-serif text-lg">Locked</span>
+      </div>
+      <p className="mt-2 text-sm text-cream/80">
+        Sign in to check whether you've completed this stop and to answer the question.
+      </p>
+      <Link to="/auth" className="mt-3 inline-block text-sm text-gold underline underline-offset-4">
+        Sign in to unlock →
+      </Link>
+    </div>
+  );
+}
 
 function LockedPanel({ completedAt, stopName }: { completedAt: string; stopName: string }) {
   const returnDate = formatReturnDate(completedAt);

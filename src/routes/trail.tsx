@@ -52,7 +52,7 @@ function TrailPage() {
           <p className="text-xs uppercase tracking-[0.2em] text-gold">The Trail</p>
           <h1 className="mt-2 font-serif text-3xl text-cream md:text-5xl">Five stops. Any order.</h1>
           <p className="mt-2 max-w-xl text-sm text-muted-foreground md:text-base">
-            Tap a marker to see what's there. When you arrive, scan the QR and answer the question in front of you.
+            Tap a marker to see what's there. When you arrive, open the stop and answer the question in front of you.
           </p>
         </div>
 
