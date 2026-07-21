@@ -6,8 +6,8 @@
 
 /*
  * Jalan Stories — heritage shophouse design system.
- * Warm rust red, gold, deep espresso brown, cream — lantern-lit night
- * at New World. Dark by default.
+ * Peranakan jade: deep teal-green, brass gold, lantern red, cream —
+ * the palette of Peranakan tiles after dark. Dark by default.
  */
 
 @theme inline {
@@ -50,15 +50,15 @@
   --radius: 0.5rem;
 
   /* Brand */
-  --rust: oklch(0.54 0.17 32);       /* warm lantern red */
-  --gold: oklch(0.78 0.14 82);       /* aged brass gold */
-  --teal: oklch(0.52 0.08 210);      /* jade accent */
+  --rust: oklch(0.56 0.17 30);       /* lantern red */
+  --gold: oklch(0.79 0.14 84);       /* brass gold */
+  --teal: oklch(0.6 0.09 200);       /* jade accent */
   --cream: oklch(0.96 0.03 85);      /* #FDF6E3 */
-  --sand: oklch(0.86 0.06 80);       /* #E8D5B0 */
-  --surface: oklch(0.25 0.035 55);   /* warm chestnut */
+  --sand: oklch(0.87 0.05 85);       /* warm sand */
+  --surface: oklch(0.26 0.045 200);  /* deep jade */
 
   /* Semantic — dark by default */
-  --background: oklch(0.18 0.028 50);          /* deep espresso */
+  --background: oklch(0.19 0.038 205);         /* midnight teal-green */
   --foreground: var(--cream);
   --card: var(--surface);
   --card-foreground: var(--cream);
@@ -67,8 +67,8 @@
   --primary: var(--rust);
   --primary-foreground: var(--cream);
   --secondary: var(--gold);
-  --secondary-foreground: oklch(0.18 0.028 50);
-  --muted: oklch(0.29 0.032 55);
+  --secondary-foreground: oklch(0.19 0.038 205);
+  --muted: oklch(0.3 0.04 200);
   --muted-foreground: var(--sand);
   --accent: var(--teal);
   --accent-foreground: var(--cream);
@@ -80,11 +80,11 @@
 
   --shadow-gold: 0 8px 32px -8px oklch(0.77 0.14 82 / 0.35);
   --shadow-deep: 0 20px 60px -20px oklch(0 0 0 / 0.5);
-  --gradient-hero: radial-gradient(ellipse at 30% 20%, oklch(0.54 0.17 32 / 0.28), transparent 60%),
-                   radial-gradient(ellipse at 70% 80%, oklch(0.78 0.14 82 / 0.14), transparent 60%),
-                   linear-gradient(180deg, oklch(0.18 0.028 50), oklch(0.13 0.024 45));
-  --gradient-gold: linear-gradient(135deg, oklch(0.78 0.14 82), oklch(0.68 0.15 60));
-  --gradient-rust: linear-gradient(135deg, oklch(0.54 0.17 32), oklch(0.43 0.16 27));
+  --gradient-hero: radial-gradient(ellipse at 30% 20%, oklch(0.56 0.17 30 / 0.22), transparent 60%),
+                   radial-gradient(ellipse at 70% 80%, oklch(0.79 0.14 84 / 0.13), transparent 60%),
+                   linear-gradient(180deg, oklch(0.19 0.038 205), oklch(0.13 0.032 210));
+  --gradient-gold: linear-gradient(135deg, oklch(0.79 0.14 84), oklch(0.68 0.15 60));
+  --gradient-rust: linear-gradient(135deg, oklch(0.56 0.17 30), oklch(0.45 0.16 26));
 
   /* Fluid type scale — used site-wide; never override with raw px. */
   --text-hero:  clamp(1.75rem, 6vw + 0.5rem, 3.5rem);
@@ -286,5 +286,8 @@
   background: linear-gradient(135deg, #D4A017, #B8860B);
   color: #1A1A2E;
 }
-.leaflet-container { background: #251a10; font-family: inherit; }
+.leaflet-container {
+  background: #122826;
+  font-family: inherit;
+}
 .leaflet-control-attribution { font-size: 10px !important; }
