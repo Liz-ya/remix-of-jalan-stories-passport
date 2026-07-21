@@ -36,7 +36,7 @@ export function DemoScheduleBoard() {
   const demos = sortedDemos(now);
 
   return (
-    <div className="rounded-2xl border-4 border-double border-gold/40 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.04),transparent_60%),linear-gradient(180deg,#231607,#140c04)] p-6 shadow-deep">
+    <div className="rounded-2xl border-4 border-double border-gold/40 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.04),transparent_60%),linear-gradient(180deg,#0e2422,#071312)] p-6 shadow-deep">
       <div className="mb-5 flex items-end justify-between border-b border-gold/20 pb-4">
         <div>
           <p className="font-serif text-[10px] uppercase tracking-[0.4em] text-rust">
