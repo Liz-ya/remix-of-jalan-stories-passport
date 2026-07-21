@@ -122,17 +122,19 @@ export const STOPS: Stop[] = [
   {
     id: 4,
     name: "New World Gate, City Square Mall",
-    theme: "Amusement park heritage",
+    theme: "Singapore's first amusement park",
     location: "City Square Mall, Kitchener Road",
     description:
-      "The ornate gate standing outside City Square Mall once welcomed thousands a night into New World Amusement Park — the first of Singapore's three great \"Worlds\", opened in 1923 between Jalan Besar and Kitchener Road. Inside were cabaret dancers, bangsawan opera, boxing and wrestling matches, shooting galleries and open-air cinema; the Shaw brothers ran it from 1938 and made it the island's playground for half a century. The park closed in 1987 and the mall rose in its place, but the entrance gate was restored and re-erected where you now stand — the last piece of the fairground still on its street.",
+      "The gate you just scanned once swallowed thousands of people a night. This was New World — Singapore's first amusement park, opened in 1923 by Straits Chinese brothers Ong Boon Tat and Ong Peng Hock, and the original of the three great \"Worlds\" that Great World and Gay World later copied. Packed into 45,000 square feet along Jalan Besar were rides, carousels, open-air cinemas, boxing and wrestling arenas, dance halls and no fewer than five opera stages. You could spend a whole day inside: family photo, haircut at the barber, hawker dinner, a stroll in the park — and never see it all. The park is gone, but its gate still stands where you do now: the only physical remnant of Singapore's first playground.",
     lat: 1.31130,
     lng: 103.85630,
     x: 72,
     y: 34,
     facts: [
-      { label: "Park opened", value: "1923" },
-      { label: "Gate restored", value: "2009" },
+      { label: "Opened", value: "1923" },
+      { label: "Size", value: "~45,000 sq ft" },
+      { label: "Closed", value: "April 1987" },
+      { label: "Gate rebuilt", value: "January 2011" },
     ],
     puzzle: {
       question: "The historic gate outside City Square Mall once welcomed visitors to what?",
@@ -143,15 +145,32 @@ export const STOPS: Stop[] = [
         "A cinema hall",
       ],
       correctIndex: 1,
-      hint: "Cabaret, opera and boxing nights — Singapore's first great \"World\".",
+      hint: "Opera stages, cabaret dance halls and wrestling arenas — Singapore's first great \"World\".",
     },
     highlights: {
       heading: "New World Gate",
-      subheading: "Singapore's playground, 1923–1987",
+      subheading: "Singapore's first amusement park",
       blocks: [
-        { title: "1923 — The park opens", body: "New World Amusement Park opened between Jalan Besar and Kitchener Road — the first of Singapore's three great \"Worlds\", decades before shopping malls existed." },
-        { title: "The golden decades", body: "Cabaret dancers, bangsawan opera, boxing and wrestling matches drew thousands nightly. The Shaw brothers ran the park from 1938." },
-        { title: "The gate today", body: "The park closed in 1987, but its ornate entrance gate was restored and now stands at City Square Mall — the spot where you're standing." },
+        {
+          title: "1923 — The Ong brothers open the gates",
+          body: "Ong Boon Tat and Ong Peng Hock, sons of businessman Ong Sam Leong, opened New World as the first of the three \"Worlds\" — Great World (early 1930s) and Gay World (1936) followed. It sprawled across about 45,000 sq ft along Jalan Besar.",
+        },
+        {
+          title: "Five opera stages under one roof",
+          body: "Peking opera at the Octagonal Pavilion (Bajiao Ting) and the indoor Wa Wutai, a Fujian opera stage, Chaozhou opera at Bai Lao Hui — home of the Lau Sai Thor Guan Teochew Wayang troupe — and Cantonese opera at Riguang Tai (Sunshine Stage), said to be the park's biggest theatre.",
+        },
+        {
+          title: "Names on the marquee",
+          body: "Wrestler King Kong (Hungarian Emile Czaya), strongman Mat Tarzan, boxer Felix Boy — and Rose Chan, the 1950s \"Queen of Strip\", who also wrestled pythons and bent iron bars. In 1949 Madame Tai Fong's Fong Fong Revue drew crowds so large the colonial police warned that \"this monkey business must cease.\"",
+        },
+        {
+          title: "The part nobody puts on a poster",
+          body: "The cabaret \"lancing girls\" — three dance coupons for as little as a dollar — were philanthropists too. The Singapore Dance Hostesses' Association raised $13,000 for the Nanyang University building fund in 1953, and Rose Chan gave to charities for children, the elderly, TB patients and the blind.",
+        },
+        {
+          title: "1987 — Lights out, gate stays",
+          body: "Television, discos and shopping malls killed the park; it closed for good in April 1987 and Shaw sold the land to CDL. City Square Mall rose in its place, and in January 2011 the gate was reconstructed at City Green with NParks, NHB and URA — come back after dark for the light show projected onto it.",
+        },
       ],
     },
   },
@@ -199,28 +218,27 @@ export interface DemoSlot {
 export const DEMOS: DemoSlot[] = [
   { id: "d1", stopId: 1, title: "Live food preparation by local hawkers", vendor: "Berseh Food Centre hawkers", start: "10:00", end: "11:30" },
   { id: "d2", stopId: 2, title: "Henna art demonstrations", vendor: "Syed Alwi henna artists", start: "12:00", end: "13:00" },
-  { id: "d3", stopId: 3, title: "Shophouse heritage walk", vendor: "Desker Road community guides", start: "14:00", end: "16:00" },
-  { id: "d4", stopId: 4, title: "New World stories showcase", vendor: "City Square Mall heritage corner", start: "15:30", end: "16:30" },
-  { id: "d5", stopId: 5, title: "Community cultural performance", vendor: "Lembu Road community groups", start: "17:00", end: "18:00" },
   {
     id: "d-sinhin",
     stopId: 3,
-    title: "Traditional Coffee Roasting",
+    title: "Traditional coffee roasting by Sin Hin & Co",
     vendor: "Sin Hin & Co.",
     location: "109 Desker Road",
-    start: "08:30",
-    end: "16:30",
+    start: "14:00",
+    end: "16:00",
     detail: {
       heading: "Sin Hin & Co.",
       subheading: "Traditional coffee roasting · 109 Desker Road",
       body:
         "There's no sign worth noticing at No. 109. That's the point — Sin Hin sells to kopitiams, not to you. For over thirty years, this family firm has processed coffee beans on Desker Road, weekday mornings, weekends off, while the street changed around it.",
       rows: [
-        { label: "When to visit", value: "Mon–Fri, 8:30am–4:30pm" },
+        { label: "Demo slot", value: "Daily, 2:00–4:00pm" },
         { label: "What you'll see", value: "green beans going in, a caramelised block coming out" },
       ],
     },
   },
+  { id: "d4", stopId: 4, title: "Cultural dance performances & Light Show", vendor: "New World Gate heritage stage", start: "15:30", end: "16:30" },
+  { id: "d5", stopId: 5, title: "Mural painting & floor art", vendor: "Lembu Road community artists", start: "17:00", end: "18:00" },
 ];
 
 export type DemoState = "live" | "soon" | "upcoming" | "ended";
