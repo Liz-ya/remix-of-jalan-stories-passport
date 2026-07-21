@@ -1,61 +1,80 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
-import jsQR from "jsqr";
-import { STOPS } from "@/lib/trail-data";
+import type { Map as LMap } from "leaflet";
+import { STOPS, DEMOS, getActiveOrUpcomingDemo, getNextStop, walkingMinutes, formatTimeRange, formatCountdown } from "@/lib/trail-data";
 import { SiteHeader } from "@/components/site-header";
-import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { X, Camera, Sparkles, CheckCircle2, MapPin } from "lucide-react";
-
-// Note: getUserMedia + BarcodeDetector require HTTPS (or localhost).
+import { X, Camera, MapPin, CheckCircle2, Sparkles } from "lucide-react";
+import { isDemoMode } from "@/lib/demo-mode";
+import { motion, AnimatePresence } from "framer-motion";
 
 export const Route = createFileRoute("/puzzle/$stopId")({
   head: ({ params }) => {
     const stop = STOPS.find((s) => s.id === Number(params.stopId));
-    const title = stop ? `${stop.name} · Question` : "Question";
+    const title = stop ? `${stop.name} · Stop` : "Stop";
     return {
       meta: [
         { title: `${title} · Jalan Stories` },
-        { name: "description", content: "Point your camera to unlock the heritage question at this Jalan Besar stop." },
+        { name: "description", content: "Explore this Jalan Besar heritage stop — story, AR view, map and question." },
       ],
     };
   },
   component: PuzzlePage,
 });
 
-// Accepted QR payload formats:
-//   jalan-stories:stop:<id>
-//   https://jalan-stories.app/stop/<id>
-function parsePayload(text: string): { stopId: number } | null {
-  const t = text.trim();
-  const m1 = /^jalan-stories:stop:(\d+)$/i.exec(t);
-  if (m1) return { stopId: Number(m1[1]) };
-  const m2 = /\/stop\/(\d+)\b/i.exec(t);
-  if (m2) return { stopId: Number(m2[1]) };
-  return null;
+const LOCK_DAYS = 180;
+
+function formatReturnDate(fromISO: string): string {
+  const d = new Date(fromISO);
+  d.setDate(d.getDate() + LOCK_DAYS);
+  return d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
 }
+
+type LockState =
+  | { kind: "loading" }
+  | { kind: "unlocked"; expired?: boolean }
+  | { kind: "locked"; completedAt: string; demoAttended: boolean };
 
 function PuzzlePage() {
   const { stopId } = Route.useParams();
-  const stop = STOPS.find((s) => s.id === Number(stopId));
-  const navigate = useNavigate();
-  const [arOpen, setArOpen] = useState(false);
-  const [scannedPayloads, setScannedPayloads] = useState<Set<string>>(new Set());
-  const alreadyScanned = useMemo(
-    () => stop ? [...scannedPayloads].some((p) => parsePayload(p)?.stopId === stop.id) : false,
-    [scannedPayloads, stop],
-  );
+  const sid = Number(stopId);
+  const stop = STOPS.find((s) => s.id === sid);
+  const next = stop ? getNextStop(stop.id) : null;
+  const demo = stop ? getActiveOrUpcomingDemo(stop.id) : null;
+  const puzzleRef = useRef<HTMLDivElement | null>(null);
+  const [lock, setLock] = useState<LockState>({ kind: "loading" });
+  const demoMode = isDemoMode();
 
-  // Load saved scans on mount so progress survives reload
   useEffect(() => {
+    if (!stop) return;
+    if (demoMode) {
+      setLock({ kind: "unlocked" });
+      return;
+    }
     (async () => {
       const { data: userData } = await supabase.auth.getUser();
-      if (!userData.user) return;
-      const { data } = await supabase.from("scans").select("qr_payload");
-      if (data) setScannedPayloads(new Set(data.map((r) => r.qr_payload as string)));
+      if (!userData.user) {
+        setLock({ kind: "unlocked" });
+        return;
+      }
+      const { data } = await supabase
+        .from("visitor_progress" as never)
+        .select("completed_at,demo_attended")
+        .eq("user_id", userData.user.id)
+        .eq("stop_id", stop.id)
+        .order("completed_at", { ascending: false })
+        .limit(1);
+      const row = (data as Array<{ completed_at: string; demo_attended: boolean }> | null)?.[0];
+      if (!row) return setLock({ kind: "unlocked" });
+      const ageMs = Date.now() - new Date(row.completed_at).getTime();
+      if (ageMs < LOCK_DAYS * 86400 * 1000) {
+        setLock({ kind: "locked", completedAt: row.completed_at, demoAttended: row.demo_attended });
+      } else {
+        setLock({ kind: "unlocked", expired: true });
+      }
     })();
-  }, []);
+  }, [stop, demoMode]);
 
   if (!stop) {
     return (
@@ -69,164 +88,118 @@ function PuzzlePage() {
     );
   }
 
-  async function persistScan(payload: string, sid: number): Promise<"saved" | "duplicate" | "unauth" | "error"> {
-    const { data: userData } = await supabase.auth.getUser();
-    if (!userData.user) return "unauth";
-    const { error } = await supabase
-      .from("scans")
-      .insert({ user_id: userData.user.id, stop_id: sid, qr_payload: payload });
-    if (error) {
-      if (error.code === "23505" || error.message.toLowerCase().includes("duplicate")) return "duplicate";
-      console.error(error);
-      return "error";
-    }
-    // Also mark stop visit (idempotent — table has its own unique behavior; ignore duplicate errors)
-    await supabase
-      .from("user_stop_visits")
-      .insert({ user_id: userData.user.id, stop_id: sid })
-      .then(() => {}, () => {});
-    return "saved";
-  }
-
-  async function handleScanResult(payload: string) {
-    const parsed = parsePayload(payload);
-    if (!parsed) {
-      toast.error("Invalid QR code");
-      return false;
-    }
-    if (parsed.stopId !== stop!.id) {
-      toast.error(`This QR belongs to stop ${parsed.stopId}. Head there to scan it.`);
-      return false;
-    }
-    if (scannedPayloads.has(payload)) {
-      toast("Already collected", { description: `You already scanned ${stop!.name}.` });
-      return true;
-    }
-    const result = await persistScan(payload, parsed.stopId);
-    if (result === "unauth") {
-      toast.error("Sign in to save your scan", {
-        action: { label: "Sign in", onClick: () => (window.location.href = "/auth") },
-      });
-      return false;
-    }
-    if (result === "error") {
-      toast.error("Couldn't save your scan. Please try again.");
-      return false;
-    }
-    setScannedPayloads((prev) => new Set(prev).add(payload));
-    if (typeof navigator !== "undefined" && "vibrate" in navigator) navigator.vibrate(200);
-    if (result === "duplicate") {
-      toast("Already collected", { description: `You already scanned ${stop!.name}.` });
-    } else {
-      toast.success(`Heritage marker unlocked at ${stop!.name}!`);
-    }
-    return true;
-  }
+  const scrollToPuzzle = () => puzzleRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
 
   return (
     <div className="min-h-dvh bg-hero bg-tile pb-safe">
       <SiteHeader />
-      <div className="mx-auto w-full max-w-3xl px-4 py-8 md:px-6 md:py-10">
+      <div className="mx-auto w-full max-w-2xl px-4 py-6 md:py-10">
         <Link to="/trail" className="text-xs uppercase tracking-widest text-gold">← Back to trail</Link>
-        <p className="mt-6 text-xs uppercase tracking-[0.2em] text-gold">Stop {stop.id} · {stop.theme}</p>
-        <h1 className="mt-2 font-serif text-3xl text-cream sm:text-4xl md:text-5xl">{stop.name}</h1>
-        <p className="mt-2 flex items-center gap-1 text-sm text-muted-foreground">
-          <MapPin className="h-4 w-4" /> {stop.location}
-        </p>
 
-        <div className="mt-8 rounded-2xl border border-white/10 bg-card/70 p-5 md:p-6">
-          <h2 className="font-serif text-xl text-cream">The Heritage Story</h2>
-          <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{stop.description}</p>
-          {alreadyScanned && (
-            <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-gold/40 bg-secondary/10 px-3 py-1 text-xs text-gold">
-              <CheckCircle2 className="h-4 w-4" /> Stamp collected
+        {/* SECTION 1: HERITAGE INFO */}
+        <section className="mt-6">
+          <span className="inline-flex items-center rounded-full bg-[#C0392B] px-3 py-1 text-xs font-semibold text-white">
+            Stop {stop.id}
+          </span>
+          <h1
+            className="mt-3 font-bold text-cream"
+            style={{ fontFamily: "Georgia, serif", fontSize: "28px", lineHeight: 1.15 }}
+          >
+            {stop.name}
+          </h1>
+          <p className="mt-1 italic text-gold" style={{ fontSize: "14px" }}>{stop.theme}</p>
+          <p className="mt-4 leading-relaxed text-cream/90" style={{ fontSize: "16px", lineHeight: 1.6 }}>
+            {stop.description}
+          </p>
+
+          {stop.facts && stop.facts.length > 0 && (
+            <div className="mt-5 grid grid-cols-2 gap-3">
+              {stop.facts.map((f) => (
+                <div key={f.label} className="rounded-lg border border-gold/25 bg-black/30 p-3">
+                  <div className="text-[10px] uppercase tracking-[0.2em] text-gold">{f.label}</div>
+                  <div className="mt-1 font-serif text-cream">{f.value}</div>
+                </div>
+              ))}
             </div>
           )}
-        </div>
+        </section>
 
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-          <Button
-            onClick={() => setArOpen(true)}
-            className="min-h-11 bg-rust-gradient text-cream shadow-gold hover:opacity-90"
-          >
-            <Camera className="mr-2 h-4 w-4" /> Activate AR Scanner
-          </Button>
-          <Link
-            to="/trail"
-            className="inline-flex min-h-11 items-center justify-center rounded-md border border-gold/50 bg-secondary/10 px-4 py-2 text-sm text-gold"
-          >
-            Back to map
-          </Link>
-        </div>
+        {/* SECTION 2: AR VIEW */}
+        <ArSection />
 
-        <p className="mt-6 text-xs text-muted-foreground">
-          Expected QR format: <code className="text-gold">jalan-stories:stop:{stop.id}</code>
-        </p>
+        {/* SECTION 3: LOCATION MAP */}
+        <MapSection stop={stop} nextMinutes={next ? walkingMinutes(stop, next) : null} nextName={next?.name ?? null} />
+
+        {/* SECTION 4: LIVE DEMO */}
+        {demo && <LiveDemoSection stopId={stop.id} demoMode={demoMode} />}
+
+        {/* SECTION 5: QUESTION */}
+        <section ref={puzzleRef} className="mt-10">
+          <h2 style={{ fontFamily: "Georgia, serif", color: "#C0392B", fontWeight: 700, fontSize: "18px" }}>
+            Heritage Challenge
+          </h2>
+          {lock.kind === "loading" && (
+            <p className="mt-4 text-sm text-muted-foreground">Loading…</p>
+          )}
+          {lock.kind === "locked" && (
+            <LockedPanel completedAt={lock.completedAt} stopName={stop.name} />
+          )}
+          {lock.kind === "unlocked" && (
+            <UnlockedPuzzle stop={stop} expired={!!lock.expired} demoMode={demoMode} />
+          )}
+        </section>
+
+        {/* Only primary CTA — reveals/scrolls to puzzle */}
+        {lock.kind === "unlocked" && (
+          <div className="mt-8">
+            <button
+              onClick={scrollToPuzzle}
+              className="w-full rounded-md text-white transition-opacity hover:opacity-90"
+              style={{ height: "52px", background: "#C0392B", fontFamily: "Georgia, serif", fontSize: "16px" }}
+            >
+              Answer the Question →
+            </button>
+          </div>
+        )}
       </div>
-
-      {arOpen && (
-        <ArScanner
-          stopName={stop.name}
-          story={stop.description}
-          onExit={() => setArOpen(false)}
-          onScan={handleScanResult}
-          onDone={() => {
-            setArOpen(false);
-            setTimeout(() => navigate({ to: "/stamp" }), 700);
-          }}
-        />
-      )}
     </div>
   );
 }
 
-type ArState = "requesting" | "scanning" | "success" | "denied" | "unavailable" | "timeout";
+/* ─────────────── AR Section ─────────────── */
 
-function ArScanner({
-  stopName,
-  story,
-  onExit,
-  onScan,
-  onDone,
-}: {
-  stopName: string;
-  story: string;
-  onExit: () => void;
-  onScan: (payload: string) => Promise<boolean>;
-  onDone: () => void;
-}) {
+function ArSection() {
+  const [open, setOpen] = useState(false);
+  return (
+    <section className="mt-10">
+      <h2 className="italic text-gold" style={{ fontFamily: "Georgia, serif", fontSize: "16px" }}>
+        Experience in AR
+      </h2>
+      <button
+        onClick={() => setOpen(true)}
+        className="mt-3 flex w-full items-center justify-center gap-2 rounded-md text-cream hover:opacity-90"
+        style={{ height: "48px", background: "#1B6B7A", fontFamily: "Georgia, serif", fontSize: "16px" }}
+      >
+        <Camera className="h-4 w-4" /> Activate AR View
+      </button>
+      <p className="mt-2 text-xs text-muted-foreground">
+        Point your camera at surroundings to see heritage layers appear
+      </p>
+      {open && <ArOverlay onClose={() => setOpen(false)} />}
+    </section>
+  );
+}
+
+function ArOverlay({ onClose }: { onClose: () => void }) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
-  const rafRef = useRef<number | null>(null);
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const scanningRef = useRef(true);
-  const [state, setState] = useState<ArState>("requesting");
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
-
-  function stopCamera() {
-    scanningRef.current = false;
-    if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    rafRef.current = null;
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    timeoutRef.current = null;
-    const s = streamRef.current;
-    if (s) {
-      s.getTracks().forEach((t) => t.stop());
-      streamRef.current = null;
-    }
-    if (videoRef.current) {
-      try { videoRef.current.srcObject = null; } catch { /* noop */ }
-    }
-  }
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
-
     (async () => {
       if (!navigator.mediaDevices?.getUserMedia) {
-        setState("unavailable");
-        setErrorMsg("No camera available on this device.");
+        setError("Camera not available on this device.");
         return;
       }
       try {
@@ -238,189 +211,273 @@ function ArScanner({
         streamRef.current = stream;
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
-          await videoRef.current.play().catch(() => {});
+          videoRef.current.play().catch(() => {});
         }
-        setState("scanning");
-        scanLoop();
-
-        // 45s timeout — user hasn't scanned anything
-        timeoutRef.current = setTimeout(() => {
-          if (scanningRef.current) {
-            setState("timeout");
-            stopCamera();
-          }
-        }, 45000);
-      } catch (e) {
-        console.error(e);
-        const err = e as { name?: string };
-        if (err?.name === "NotAllowedError" || err?.name === "SecurityError") {
-          setState("denied");
-          setErrorMsg("Camera permission denied. Enable camera access in your browser settings.");
-        } else if (err?.name === "NotFoundError" || err?.name === "OverconstrainedError") {
-          setState("unavailable");
-          setErrorMsg("No camera found on this device.");
-        } else {
-          setState("unavailable");
-          setErrorMsg("Unable to open camera. Please try again.");
-        }
+      } catch {
+        setError("Camera permission denied.");
       }
     })();
-
-    function scanLoop() {
-      if (!scanningRef.current) return;
-      const video = videoRef.current;
-      const canvas = canvasRef.current;
-      if (video && canvas && video.readyState === video.HAVE_ENOUGH_DATA) {
-        const w = video.videoWidth;
-        const h = video.videoHeight;
-        if (w > 0 && h > 0) {
-          canvas.width = w;
-          canvas.height = h;
-          const ctx = canvas.getContext("2d", { willReadFrequently: true });
-          if (ctx) {
-            ctx.drawImage(video, 0, 0, w, h);
-            const img = ctx.getImageData(0, 0, w, h);
-            const code = jsQR(img.data, w, h, { inversionAttempts: "dontInvert" });
-            if (code?.data) {
-              scanningRef.current = false;
-              playSuccessTone();
-              onScan(code.data).then((ok) => {
-                if (ok) {
-                  setState("success");
-                  stopCamera();
-                  setTimeout(onDone, 900);
-                } else {
-                  scanningRef.current = true;
-                  rafRef.current = requestAnimationFrame(scanLoop);
-                }
-              });
-              return;
-            }
-          }
-        }
-      }
-      rafRef.current = requestAnimationFrame(scanLoop);
-    }
-
     return () => {
       cancelled = true;
-      stopCamera();
+      streamRef.current?.getTracks().forEach((t) => t.stop());
+      streamRef.current = null;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  function handleExit() {
-    stopCamera();
-    onExit();
-  }
-
-  function playSuccessTone() {
-    try {
-      const AC = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-      const ctx = new AC();
-      const now = ctx.currentTime;
-      [523.25, 659.25, 783.99].forEach((freq, i) => {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = "sine";
-        osc.frequency.value = freq;
-        gain.gain.setValueAtTime(0.0001, now + i * 0.12);
-        gain.gain.exponentialRampToValueAtTime(0.2, now + i * 0.12 + 0.02);
-        gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.12 + 0.3);
-        osc.connect(gain).connect(ctx.destination);
-        osc.start(now + i * 0.12);
-        osc.stop(now + i * 0.12 + 0.32);
-      });
-      setTimeout(() => ctx.close(), 1000);
-    } catch { /* ignore */ }
-  }
-
-  const isError = state === "denied" || state === "unavailable" || state === "timeout";
 
   return (
     <div className="fixed inset-0 z-[9999] bg-black pt-safe pb-safe pl-safe pr-safe">
       <video ref={videoRef} playsInline muted className="absolute inset-0 h-full w-full object-cover" />
-      <canvas ref={canvasRef} className="hidden" />
-
-      {/* Flash on success */}
-      <div className={`pointer-events-none absolute inset-0 bg-gold/40 transition-opacity duration-300 ${state === "success" ? "opacity-100" : "opacity-0"}`} />
-
-      {/* Top bar */}
       <div className="absolute inset-x-0 top-0 flex items-center justify-between bg-gradient-to-b from-black/70 to-transparent p-4 pt-[max(1rem,env(safe-area-inset-top))] text-cream">
         <button
-          onClick={handleExit}
-          aria-label="Exit AR"
+          onClick={onClose}
+          aria-label="Close AR"
           className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-black/60 backdrop-blur"
         >
           <X className="h-5 w-5" />
         </button>
-        <div className="text-right">
-          <div className="text-[10px] uppercase tracking-[0.3em] text-gold">AR Scanner</div>
-          <div className="font-serif text-sm">{stopName}</div>
-        </div>
+        <div className="text-[10px] uppercase tracking-[0.3em] text-gold">AR View</div>
       </div>
-
-      {/* Scan frame */}
-      <ScanFrame active={state === "scanning"} />
-
-      {/* Status text */}
-      {state === "scanning" && (
-        <div className="absolute left-1/2 top-[calc(50%+140px)] -translate-x-1/2 text-center text-cream">
-          <div className="inline-flex items-center gap-1 rounded-full bg-black/50 px-4 py-1.5 text-xs backdrop-blur">
-            Scanning for heritage marker
-            <span className="animate-pulse">.</span>
-            <span className="animate-pulse" style={{ animationDelay: "150ms" }}>.</span>
-            <span className="animate-pulse" style={{ animationDelay: "300ms" }}>.</span>
-          </div>
+      <div className="pointer-events-none absolute left-1/2 top-1/2 h-56 w-56 -translate-x-1/2 -translate-y-1/2 sm:h-64 sm:w-64">
+        <div className="absolute left-0 top-0 h-10 w-10 rounded-tl-lg border-l-4 border-t-4 border-gold animate-pulse" />
+        <div className="absolute right-0 top-0 h-10 w-10 rounded-tr-lg border-r-4 border-t-4 border-gold animate-pulse" />
+        <div className="absolute bottom-0 left-0 h-10 w-10 rounded-bl-lg border-b-4 border-l-4 border-gold animate-pulse" />
+        <div className="absolute bottom-0 right-0 h-10 w-10 rounded-br-lg border-b-4 border-r-4 border-gold animate-pulse" />
+        <Sparkles className="absolute left-1/2 top-1/2 h-8 w-8 -translate-x-1/2 -translate-y-1/2 text-gold/80" />
+      </div>
+      {error && (
+        <div className="absolute inset-x-0 bottom-24 mx-auto max-w-sm rounded-lg bg-black/80 p-4 text-center text-sm text-cream">
+          {error}
         </div>
       )}
+    </div>
+  );
+}
 
-      {isError && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/85 p-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] text-center text-cream">
-          <div className="max-w-sm">
-            <p className="font-serif text-xl">
-              {state === "timeout" ? "No QR code detected" : errorMsg}
-            </p>
-            {state === "timeout" && (
-              <p className="mt-2 text-sm text-muted-foreground">
-                Move closer to the marker and try again.
+/* ─────────────── Mini Map ─────────────── */
+
+function MapSection({ stop, nextMinutes, nextName }: { stop: { lat: number; lng: number; id: number }; nextMinutes: number | null; nextName: string | null }) {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const mapRef = useRef<LMap | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const L = (await import("leaflet")).default;
+      if (cancelled || !ref.current || mapRef.current) return;
+      const map = L.map(ref.current, {
+        zoomControl: false,
+        dragging: false,
+        scrollWheelZoom: false,
+        doubleClickZoom: false,
+        touchZoom: false,
+        boxZoom: false,
+        keyboard: false,
+      }).setView([stop.lat, stop.lng], 17);
+      mapRef.current = map;
+      L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
+        maxZoom: 20,
+        attribution: "&copy; OpenStreetMap &copy; CARTO",
+      }).addTo(map);
+      const icon = L.divIcon({
+        className: "jalan-marker",
+        html: `<div class="jalan-marker-inner">${stop.id}</div>`,
+        iconSize: [44, 44],
+        iconAnchor: [22, 22],
+      });
+      L.marker([stop.lat, stop.lng], { icon }).addTo(map);
+    })();
+    return () => {
+      cancelled = true;
+      mapRef.current?.remove();
+      mapRef.current = null;
+    };
+  }, [stop.lat, stop.lng, stop.id]);
+
+  return (
+    <section className="mt-10">
+      <h2 className="italic text-gold" style={{ fontFamily: "Georgia, serif", fontSize: "16px" }}>
+        You are here
+      </h2>
+      <div ref={ref} className="mt-3 w-full overflow-hidden rounded-xl border border-gold/20" style={{ height: "220px", zIndex: 0 }} />
+      {nextMinutes != null && nextName && (
+        <p className="mt-3 text-sm text-cream/80">
+          <MapPin className="mr-1 inline h-4 w-4 text-gold" />
+          Next stop: <span className="text-cream">{nextName}</span> · ~{nextMinutes} min walk
+        </p>
+      )}
+    </section>
+  );
+}
+
+/* ─────────────── Live Demo ─────────────── */
+
+function LiveDemoSection({ stopId, demoMode }: { stopId: number; demoMode: boolean }) {
+  const [now, setNow] = useState<Date>(new Date());
+  const [attended, setAttended] = useState(false);
+  const demo = useMemo(() => getActiveOrUpcomingDemo(stopId, now), [stopId, now]);
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(id);
+  }, []);
+  if (!demo) return null;
+  const info = demo.info;
+  const label = info.state === "live" ? `Ends in ${formatCountdown(info.msToEnd)}` : `Starts in ${formatCountdown(info.msToStart)}`;
+
+  async function mark() {
+    setAttended(true);
+    toast.success("Bonus reward unlocked!");
+    if (demoMode) return;
+    const { data: userData } = await supabase.auth.getUser();
+    if (!userData.user) return;
+    await supabase.from("visitor_progress" as never).upsert({
+      user_id: userData.user.id,
+      stop_id: stopId,
+      demo_attended: true,
+    } as never);
+  }
+
+  return (
+    <section className="mt-10">
+      <h2 className="italic text-gold" style={{ fontFamily: "Georgia, serif", fontSize: "16px" }}>
+        Live Now at This Stop
+      </h2>
+      <div className="mt-3 rounded-xl border border-gold/30 bg-black/40 p-4">
+        <div className="flex items-center gap-2">
+          {info.state === "live" && <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-red-500" />}
+          <span className="text-[10px] uppercase tracking-[0.25em] text-gold">{info.state === "live" ? "Live" : "Upcoming"}</span>
+        </div>
+        <div className="mt-1 font-serif text-lg text-cream">{demo.title}</div>
+        <div className="text-sm text-muted-foreground">{demo.vendor}</div>
+        <div className="mt-1 text-xs text-sand/80">{formatTimeRange(demo.start, demo.end)} · {label}</div>
+        <button
+          onClick={mark}
+          disabled={attended}
+          className="mt-4 w-full rounded-md border border-gold/40 bg-secondary/10 py-2 text-sm text-gold hover:bg-secondary/20 disabled:opacity-60"
+          style={{ minHeight: "44px" }}
+        >
+          {attended ? "✓ Bonus reward unlocked!" : "I attended this demo"}
+        </button>
+      </div>
+    </section>
+  );
+}
+
+/* ─────────────── Puzzle (Unlocked / Locked) ─────────────── */
+
+function LockedPanel({ completedAt, stopName }: { completedAt: string; stopName: string }) {
+  const returnDate = formatReturnDate(completedAt);
+  return (
+    <div className="mt-4 rounded-xl border border-gold/25 bg-black/40 p-5 opacity-90">
+      <div className="flex items-center gap-2 text-gold">
+        <CheckCircle2 className="h-5 w-5" />
+        <span className="font-serif text-lg">You've already completed this stop.</span>
+      </div>
+      <p className="mt-2 text-sm text-cream/80">
+        Come back after <span className="text-gold">{returnDate}</span> to earn rewards again.
+      </p>
+      <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-gold-gradient px-3 py-1 text-xs font-medium text-background">
+        <Sparkles className="h-3.5 w-3.5" /> Stamp earned · {stopName}
+      </div>
+    </div>
+  );
+}
+
+function UnlockedPuzzle({ stop, expired, demoMode }: { stop: typeof STOPS[number]; expired: boolean; demoMode: boolean }) {
+  const [selected, setSelected] = useState<number | null>(null);
+  const [wrongCount, setWrongCount] = useState(0);
+  const [shake, setShake] = useState(false);
+  const [status, setStatus] = useState<"idle" | "wrong" | "correct">("idle");
+
+  async function submit() {
+    if (selected == null) return;
+    if (selected === stop.puzzle.correctIndex) {
+      setStatus("correct");
+      toast.success("Correct! You've earned your stamp.");
+      if (!demoMode) {
+        const { data: userData } = await supabase.auth.getUser();
+        if (userData.user) {
+          await supabase.from("visitor_progress" as never).insert({
+            user_id: userData.user.id,
+            stop_id: stop.id,
+          } as never);
+          await supabase.from("user_stop_visits").insert({
+            user_id: userData.user.id,
+            stop_id: stop.id,
+          }).then(() => {}, () => {});
+        }
+      }
+    } else {
+      setStatus("wrong");
+      setWrongCount((w) => w + 1);
+      setShake(true);
+      setTimeout(() => setShake(false), 500);
+    }
+  }
+
+  return (
+    <div className="mt-4">
+      {expired && (
+        <div className="mb-3 rounded-md border border-gold/30 bg-black/30 px-3 py-2 text-xs text-sand">
+          Your previous completion has expired. Complete again to earn rewards.
+        </div>
+      )}
+      <p className="text-cream" style={{ fontSize: "18px", lineHeight: 1.5 }}>{stop.puzzle.question}</p>
+
+      <AnimatePresence>
+        {status === "correct" ? (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="mt-6 rounded-xl border border-gold/40 bg-gold-gradient p-5 text-center text-background"
+          >
+            <CheckCircle2 className="mx-auto h-8 w-8" />
+            <div className="mt-2 font-serif text-lg">Correct! You've earned your stamp.</div>
+          </motion.div>
+        ) : (
+          <motion.div
+            animate={shake ? { x: [0, -8, 8, -6, 6, 0] } : { x: 0 }}
+            transition={{ duration: 0.4 }}
+            className="mt-4 flex flex-col gap-[10px]"
+          >
+            {stop.puzzle.options.map((opt, i) => {
+              const isSel = selected === i;
+              return (
+                <button
+                  key={i}
+                  onClick={() => setSelected(i)}
+                  className="w-full rounded-md px-4 text-left text-cream transition-colors"
+                  style={{
+                    height: "52px",
+                    background: isSel ? "rgba(212,160,23,0.22)" : "rgba(255,255,255,0.08)",
+                    border: isSel ? "1px solid rgba(212,160,23,0.9)" : "1px solid rgba(212,160,23,0.3)",
+                  }}
+                >
+                  {opt}
+                </button>
+              );
+            })}
+            <button
+              onClick={submit}
+              disabled={selected == null}
+              className="mt-2 w-full rounded-md text-white disabled:opacity-50"
+              style={{ height: "52px", background: "#C0392B", fontFamily: "Georgia, serif", fontSize: "16px" }}
+            >
+              Submit Answer
+            </button>
+            {status === "wrong" && (
+              <p className="mt-1 text-sm text-rust">Not quite — try again</p>
+            )}
+            {wrongCount >= 2 && status !== "correct" && (
+              <p className="mt-1 rounded-md border border-gold/30 bg-black/30 p-3 text-xs text-sand">
+                <span className="text-gold">Hint:</span> {stop.puzzle.hint}
               </p>
             )}
-            <Button onClick={handleExit} className="mt-4 min-h-11">Close</Button>
-          </div>
-        </div>
-      )}
-
-      {/* Bottom heritage panel */}
-      {!isError && (
-        <div className="absolute inset-x-0 bottom-0 rounded-t-2xl border-t border-gold/40 bg-background/85 p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] text-cream backdrop-blur-lg animate-fade-up">
-          <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-gold/40" />
-          <p className="text-[10px] uppercase tracking-[0.3em] text-gold">Heritage Story</p>
-          <h3 className="mt-1 font-serif text-lg text-cream">{stopName}</h3>
-          <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">{story}</p>
-          {state === "success" && (
-            <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-gold-gradient px-4 py-2 text-sm font-medium text-background">
-              <CheckCircle2 className="h-4 w-4" /> Stamp claimed!
-            </div>
-          )}
-        </div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
 
-function ScanFrame({ active }: { active: boolean }) {
-  const cornerBase =
-    "absolute h-10 w-10 border-gold transition-all duration-300 " + (active ? "animate-pulse" : "");
-  return (
-    <div className="pointer-events-none absolute left-1/2 top-1/2 h-56 w-56 -translate-x-1/2 -translate-y-1/2 sm:h-64 sm:w-64">
-      <div className={cornerBase + " left-0 top-0 border-l-4 border-t-4 rounded-tl-lg"} />
-      <div className={cornerBase + " right-0 top-0 border-r-4 border-t-4 rounded-tr-lg"} />
-      <div className={cornerBase + " bottom-0 left-0 border-b-4 border-l-4 rounded-bl-lg"} />
-      <div className={cornerBase + " bottom-0 right-0 border-b-4 border-r-4 rounded-br-lg"} />
-      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-gold/70">
-        <Sparkles className="h-8 w-8" />
-      </div>
-    </div>
-  );
-}
+// Silence unused import warning in case DEMOS isn't referenced elsewhere.
+void DEMOS;
