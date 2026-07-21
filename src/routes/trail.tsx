@@ -56,13 +56,11 @@ function TrailPage() {
           </p>
         </div>
 
-        {/* Map wrapper: sits below any Radix modal (z-0) */}
         <div className="relative z-0 h-[60dvh] w-full md:h-[560px]">
           <LeafletTrailMap
             onSelect={setSelected}
             visits={visits}
             targetStop={selected}
-            suppressed={qrOpen}
             className="h-full w-full"
           />
         </div>
@@ -80,8 +78,8 @@ function TrailPage() {
         </section>
       </div>
 
-      {/* Bottom sheet for stop details — unmounted while QR scanner is open so map/popup can't cover it */}
-      <Sheet open={!!selected && !qrOpen} onOpenChange={(o) => !o && setSelected(null)}>
+      {/* Bottom sheet for stop details */}
+      <Sheet open={!!selected} onOpenChange={(o) => !o && setSelected(null)}>
         <SheetContent
           side="bottom"
           className="z-[9990] max-h-[85dvh] overflow-y-auto rounded-t-2xl border-t border-gold/30 bg-card pb-safe"
@@ -126,84 +124,24 @@ function TrailPage() {
 
                 <DemoStatusRow stopId={selected.id} />
 
-
-                <div>
-                  <div className="mb-2 text-xs uppercase tracking-widest text-muted-foreground">Puzzle</div>
-                  <div className="flex items-center gap-2 rounded-md border border-white/10 bg-background/60 p-3 text-sm">
-                    {visits.has(selected.id) ? (
-                      <>
-                        <CheckCircle2 className="h-4 w-4 text-gold" />
-                        <span className="text-cream">Completed</span>
-                      </>
-                    ) : (
-                      <>
-                        <Lock className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-muted-foreground">Locked — scan QR at this stop</span>
-                      </>
-                    )}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                  <Button
-                    onClick={() => setQrOpen(true)}
-                    className="min-h-11 bg-rust-gradient text-cream hover:opacity-90 shadow-gold"
-                  >
-                    <QrCode className="mr-2 h-4 w-4" />
-                    Scan QR
-                  </Button>
-                  <Link
-                    to="/puzzle/$stopId"
-                    params={{ stopId: String(selected.id) }}
-                    className="inline-flex min-h-11 items-center justify-center rounded-md border border-gold/50 bg-secondary/10 px-4 py-2 text-sm font-medium text-gold hover:bg-secondary/20"
-                  >
-                    <Sparkles className="mr-2 h-4 w-4" /> Answer the question
-                  </Link>
-                </div>
+                <Link
+                  to="/puzzle/$stopId"
+                  params={{ stopId: String(selected.id) }}
+                  className="flex w-full items-center justify-center rounded-md text-white hover:opacity-90"
+                  style={{ height: "52px", background: "#C0392B", fontFamily: "Georgia, serif", fontSize: "16px" }}
+                >
+                  Answer the Question →
+                </Link>
+                {!user && (
+                  <p className="text-center text-xs text-muted-foreground">
+                    <Link to="/auth" className="text-gold underline">Sign in</Link> to save your progress.
+                  </p>
+                )}
               </div>
             </>
           )}
         </SheetContent>
       </Sheet>
-
-      <Dialog open={qrOpen} onOpenChange={setQrOpen}>
-        <DialogContent className="z-[9999] max-w-[95vw] bg-card sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="font-serif text-cream">Point your camera</DialogTitle>
-            <DialogDescription>Scan the QR code posted at this stop to unlock its stamp.</DialogDescription>
-          </DialogHeader>
-          <div className="mx-auto my-4 flex aspect-square w-full max-w-[13rem] items-center justify-center rounded-lg bg-cream p-3">
-            <div className="grid h-full w-full grid-cols-8 grid-rows-8 gap-0.5">
-              {Array.from({ length: 64 }).map((_, i) => (
-                <div key={i} className={((i * 7 + (i % 5)) % 3 === 0) ? "bg-background" : "bg-cream"} />
-              ))}
-            </div>
-          </div>
-          {selected && (
-            <Button
-              onClick={() => markVisited(selected.id)}
-              className="min-h-11 bg-gold-gradient text-background hover:opacity-90"
-            >
-              Simulate scan · Earn stamp
-            </Button>
-          )}
-          {selected && (
-            <Link
-              to="/puzzle/$stopId"
-              params={{ stopId: String(selected.id) }}
-              onClick={() => setQrOpen(false)}
-              className="mt-2 inline-flex min-h-11 items-center justify-center rounded-md border border-gold/40 bg-secondary/10 px-4 py-2 text-sm text-gold"
-            >
-              Open live camera scanner →
-            </Link>
-          )}
-          {!user && (
-            <p className="text-center text-xs text-muted-foreground">
-              You'll need to <Link to="/auth" className="text-gold underline">sign in</Link> to save your progress.
-            </p>
-          )}
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
@@ -233,9 +171,9 @@ function StopListCard({ stop, onOpen, visited }: { stop: Stop; onOpen: () => voi
       <p className="mt-4 text-sm text-muted-foreground">{stop.description}</p>
       <div className="mt-4 flex items-center justify-between">
         <DemoStatusRow stopId={stop.id} compact />
-        <Button variant="ghost" size="sm" onClick={onOpen} className="text-gold hover:text-gold">
+        <button onClick={onOpen} className="text-sm text-gold hover:text-gold/80">
           Open stop →
-        </Button>
+        </button>
       </div>
     </Card>
   );
