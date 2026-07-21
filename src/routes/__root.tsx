@@ -90,11 +90,31 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: "Jalan Stories — Discover the Soul of Jalan Besar" },
       { property: "og:title", content: "Jalan Stories — Discover the Soul of Jalan Besar" },
       { name: "twitter:title", content: "Jalan Stories — Discover the Soul of Jalan Besar" },
-      { name: "description", content: "Self-guided heritage trail, live demos and a digital stamp through Singapore's Jalan Besar." },
-      { property: "og:description", content: "Self-guided heritage trail, live demos and a digital stamp through Singapore's Jalan Besar." },
-      { name: "twitter:description", content: "Self-guided heritage trail, live demos and a digital stamp through Singapore's Jalan Besar." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/dbba3056-997a-40d1-9d43-62fcd6f91fb2/id-preview-d1d38cf8--e811a224-c979-431f-905b-a2a900874d79.lovable.app-1783406777657.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/dbba3056-997a-40d1-9d43-62fcd6f91fb2/id-preview-d1d38cf8--e811a224-c979-431f-905b-a2a900874d79.lovable.app-1783406777657.png" },
+      {
+        name: "description",
+        content:
+          "Self-guided heritage trail, live demos and a digital stamp through Singapore's Jalan Besar.",
+      },
+      {
+        property: "og:description",
+        content:
+          "Self-guided heritage trail, live demos and a digital stamp through Singapore's Jalan Besar.",
+      },
+      {
+        name: "twitter:description",
+        content:
+          "Self-guided heritage trail, live demos and a digital stamp through Singapore's Jalan Besar.",
+      },
+      {
+        property: "og:image",
+        content:
+          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/dbba3056-997a-40d1-9d43-62fcd6f91fb2/id-preview-d1d38cf8--e811a224-c979-431f-905b-a2a900874d79.lovable.app-1783406777657.png",
+      },
+      {
+        name: "twitter:image",
+        content:
+          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/dbba3056-997a-40d1-9d43-62fcd6f91fb2/id-preview-d1d38cf8--e811a224-c979-431f-905b-a2a900874d79.lovable.app-1783406777657.png",
+      },
     ],
     links: [
       { rel: "stylesheet", href: appCss },

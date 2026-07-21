@@ -66,7 +66,9 @@ function StampPage() {
               </p>
             </div>
             <div className="rounded-md border border-gold/40 bg-background/40 px-4 py-3 text-right">
-              <div className="text-xs uppercase tracking-widest text-muted-foreground">Progress</div>
+              <div className="text-xs uppercase tracking-widest text-muted-foreground">
+                Progress
+              </div>
               <div className="font-serif text-3xl text-gold">
                 {visitedIds.length}/{STOPS.length}
               </div>
@@ -134,9 +136,7 @@ function StampPage() {
                 <Card
                   key={b.id}
                   className={`p-5 text-center transition ${
-                    earned
-                      ? "border-gold/50 bg-card"
-                      : "border-white/10 bg-card/40 opacity-60"
+                    earned ? "border-gold/50 bg-card" : "border-white/10 bg-card/40 opacity-60"
                   }`}
                 >
                   <div className={`mx-auto mb-3 text-4xl ${earned ? "" : "grayscale"}`}>
