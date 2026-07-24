@@ -59,8 +59,8 @@ export const STOPS: Stop[] = [
     location: "166 Jalan Besar",
     description:
       "Berseh Food Centre is where the neighbourhood actually eats. Opened in 1985 to rehouse street hawkers who used to trade along the roadside, it now holds third-generation stalls making kway chap, chicken rice and Hokkien mee the way the grandfather made it — no queues of tourists, no reinvented menus. Several of the current stall owners started here as children, watching their parents render pork lard at 5 a.m. The recipes have not been written down; they are simply repeated. Come for breakfast, and you'll sit next to retirees who have been ordering the same plate every morning for twenty years.",
-    lat: 1.3079,
-    lng: 103.8576,
+    lat: 1.307381,
+    lng: 103.856897,
     x: 12,
     y: 68,
     facts: [
@@ -90,8 +90,8 @@ export const STOPS: Stop[] = [
     location: "Syed Alwi Road, by Mustafa Centre",
     description:
       "Syed Alwi Road is where sari silk sits next to Malay tailors sits next to Chinese haberdashers, all selling cloth by the yard and none in the same language. Since the 1930s this stretch has been Singapore's fabric market — bolts of chiffon, brocade and cotton stacked to the ceiling, prices called out in three tongues and sealed with a nod. In 1971 a small garment shop called Mustafa opened here; it never stopped growing, and never stopped opening, becoming the 24-hour mall that now anchors the street. Bridal families still come to pick sari fabric, henna artists still work the five-foot ways, and the shopkeepers still remember which grandmother preferred which supplier.",
-    lat: 1.3096,
-    lng: 103.855,
+    lat: 1.309431,
+    lng: 103.855739,
     x: 32,
     y: 40,
     facts: [
@@ -116,8 +116,8 @@ export const STOPS: Stop[] = [
     location: "Desker Road",
     description:
       "Desker Road is named after Andre Filipe Desker, a Malacca-born Eurasian who ran the largest slaughterhouse in colonial Singapore — this was the butcher's street of the 1860s, supplying the whole town with meat from the cattle yards next door. The two rows of shophouses have since lived several lives: trades, lodgings, and now the heart of Singapore's Bangladeshi community, who call the stretch the Mini Mart. Walk it slowly — behind an unmarked shopfront at No. 109, a family firm has been roasting coffee for kopitiams for over thirty years, while the street changed around it.",
-    lat: 1.30935,
-    lng: 103.8542,
+    lat: 1.308203,
+    lng: 103.856436,
     x: 52,
     y: 58,
     facts: [
@@ -167,8 +167,8 @@ export const STOPS: Stop[] = [
     location: "City Square Mall, Kitchener Road",
     description:
       "The gate you just scanned once swallowed thousands of people a night. This was New World — Singapore's first amusement park, opened in 1923 by Straits Chinese brothers Ong Boon Tat and Ong Peng Hock, and the original of the three great \"Worlds\" that Great World and Gay World later copied. Packed into 45,000 square feet along Jalan Besar were rides, carousels, open-air cinemas, boxing and wrestling arenas, dance halls and no fewer than five opera stages. You could spend a whole day inside: family photo, haircut at the barber, hawker dinner, a stroll in the park — and never see it all. The park is gone, but its gate still stands where you do now: the only physical remnant of Singapore's first playground.",
-    lat: 1.3113,
-    lng: 103.8563,
+    lat: 1.311825,
+    lng: 103.855653,
     x: 72,
     y: 34,
     facts: [
@@ -226,8 +226,8 @@ export const STOPS: Stop[] = [
     location: "Lembu Road, off Jalan Besar",
     description:
       "\"Lembu\" means cattle in Malay, and the name is no accident — from the 1850s this was Singapore's cattle district, where traders from Calcutta ran cattle yards and dairies that fed the whole island. The herds are long gone, but the street names remember them: Lembu (cattle), Kerbau (buffalo), Desker (the butcher). Today the open space has a different kind of life — on Sundays it fills with the area's Bangladeshi and Indian migrant workers, meeting friends, sharing food and calling home. It is still what it has always been: the neighbourhood's common ground.",
-    lat: 1.3088,
-    lng: 103.8556,
+    lat: 1.309403,
+    lng: 103.854767,
     x: 88,
     y: 62,
     facts: [
