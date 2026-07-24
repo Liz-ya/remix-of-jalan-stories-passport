@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import type { Map as LMap, Marker, Polyline, CircleMarker } from "leaflet";
+import type { Map as LMap, Marker, CircleMarker } from "leaflet";
 import { STOPS, type Stop } from "@/lib/trail-data";
 import { Locate, Navigation, X } from "lucide-react";
 
@@ -68,7 +68,6 @@ export function LeafletTrailMap({ onSelect, visits, targetStop, suppressed, clas
   const mapRef = useRef<LMap | null>(null);
   const markersRef = useRef<Marker[]>([]);
   const userDotRef = useRef<CircleMarker | null>(null);
-  const polylineRef = useRef<Polyline | null>(null);
   const watchIdRef = useRef<number | null>(null);
   const orientationHandlerRef = useRef<((e: DeviceOrientationEvent) => void) | null>(null);
   const smoothedHeadingRef = useRef<number | null>(null);
@@ -93,12 +92,6 @@ export function LeafletTrailMap({ onSelect, visits, targetStop, suppressed, clas
       }).addTo(map);
 
       L.control.zoom({ position: "bottomright" }).addTo(map);
-
-      const line = L.polyline(
-        STOPS.map((s) => [s.lat, s.lng] as [number, number]),
-        { color: "#D4A017", weight: 3, dashArray: "6 8", opacity: 0.9 },
-      ).addTo(map);
-      polylineRef.current = line;
 
       STOPS.forEach((stop) => {
         const visited = visits.has(stop.id);
