@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { supabase } from "@/integrations/supabase/client";
 import { STOPS, BADGES, REWARDS, computeBadges, unlockedRewardIds } from "@/lib/trail-data";
+import { isDemoMode, getDemoVisitedStopIds } from "@/lib/demo-mode";
 import { Award, Download, Stamp, Ticket, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 
@@ -25,6 +26,11 @@ function StampPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (isDemoMode()) {
+      setVisitedIds(getDemoVisitedStopIds());
+      setLoading(false);
+      return;
+    }
     supabase
       .from("user_stop_visits")
       .select("stop_id")

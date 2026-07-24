@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Map as LMap } from "leaflet";
 import {
@@ -15,7 +15,7 @@ import { StopPhoto } from "@/components/stop-photo";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { MapPin, CheckCircle2, Sparkles, Lock } from "lucide-react";
-import { isDemoMode, disableDemoMode } from "@/lib/demo-mode";
+import { isDemoMode, getDemoVisits, recordDemoVisit } from "@/lib/demo-mode";
 import { motion, AnimatePresence } from "framer-motion";
 
 export const Route = createFileRoute("/puzzle/$stopId")({
@@ -46,12 +46,10 @@ function formatReturnDate(fromISO: string): string {
 type LockState =
   | { kind: "loading" }
   | { kind: "guest" } // not signed in — puzzle locked until login
-  | { kind: "demo" } // demo visitor — view-only, answering needs a real account
   | { kind: "unlocked"; expired?: boolean }
   | { kind: "locked"; completedAt: string; demoAttended: boolean };
 
 function PuzzlePage() {
-  const navigate = useNavigate();
   const { stopId } = Route.useParams();
   const sid = Number(stopId);
   const stop = STOPS.find((s) => s.id === sid);
@@ -64,7 +62,14 @@ function PuzzlePage() {
   useEffect(() => {
     if (!stop) return;
     if (demoMode) {
-      setLock({ kind: "demo" });
+      // Demo visitors get the full flow; their completions live in
+      // localStorage and follow the same 6-month lock.
+      const completedAt = getDemoVisits()[stop.id];
+      if (completedAt && Date.now() - new Date(completedAt).getTime() < LOCK_DAYS * 86400 * 1000) {
+        setLock({ kind: "locked", completedAt, demoAttended: false });
+      } else {
+        setLock({ kind: "unlocked", expired: !!completedAt });
+      }
       return;
     }
     (async () => {
@@ -160,11 +165,12 @@ function PuzzlePage() {
             <p className="mt-4 text-sm text-muted-foreground">Loading…</p>
           )}
           {lock.kind === "guest" && <GuestLockedPanel />}
-          {lock.kind === "demo" && <DemoLockedPanel />}
           {lock.kind === "locked" && (
             <LockedPanel completedAt={lock.completedAt} stopName={stop.name} />
           )}
-          {lock.kind === "unlocked" && <UnlockedPuzzle stop={stop} expired={!!lock.expired} />}
+          {lock.kind === "unlocked" && (
+            <UnlockedPuzzle stop={stop} expired={!!lock.expired} demoMode={demoMode} />
+          )}
         </section>
 
         {/* Only primary CTA — scrolls to puzzle, or sends guests to sign in */}
@@ -180,19 +186,6 @@ function PuzzlePage() {
             <Link to="/auth" className="btn-cta">
               Answer the Question →
             </Link>
-          </div>
-        )}
-        {lock.kind === "demo" && (
-          <div className="mt-8">
-            <button
-              onClick={() => {
-                disableDemoMode();
-                navigate({ to: "/auth" });
-              }}
-              className="btn-cta"
-            >
-              Sign in to Answer →
-            </button>
           </div>
         )}
       </div>
@@ -328,20 +321,6 @@ function LiveDemoSection({ stopId, demoMode }: { stopId: number; demoMode: boole
 
 /* ─────────────── Puzzle (Unlocked / Locked) ─────────────── */
 
-function DemoLockedPanel() {
-  return (
-    <div className="mt-4 rounded-xl border border-gold/25 bg-black/40 p-5 opacity-90">
-      <div className="flex items-center gap-2 text-gold">
-        <Lock className="h-5 w-5" />
-        <span className="font-serif text-lg">Locked in demo mode</span>
-      </div>
-      <p className="mt-2 text-sm text-cream/80">
-        Demo mode is view-only. Create an account or sign in to answer questions and collect stamps.
-      </p>
-    </div>
-  );
-}
-
 function GuestLockedPanel() {
   return (
     <div className="mt-4 rounded-xl border border-gold/25 bg-black/40 p-5 opacity-90">
@@ -377,7 +356,15 @@ function LockedPanel({ completedAt, stopName }: { completedAt: string; stopName:
   );
 }
 
-function UnlockedPuzzle({ stop, expired }: { stop: (typeof STOPS)[number]; expired: boolean }) {
+function UnlockedPuzzle({
+  stop,
+  expired,
+  demoMode,
+}: {
+  stop: (typeof STOPS)[number];
+  expired: boolean;
+  demoMode: boolean;
+}) {
   const [answer, setAnswer] = useState("");
   const [wrongCount, setWrongCount] = useState(0);
   const [shake, setShake] = useState(false);
@@ -393,6 +380,10 @@ function UnlockedPuzzle({ stop, expired }: { stop: (typeof STOPS)[number]; expir
     if (given.toLowerCase() === correctAnswer.toLowerCase()) {
       setStatus("correct");
       toast.success("Correct! You've earned your stamp.");
+      if (demoMode) {
+        recordDemoVisit(stop.id);
+        return;
+      }
       const { data: userData } = await supabase.auth.getUser();
       if (userData.user) {
         await supabase.from("visitor_progress" as never).insert({
