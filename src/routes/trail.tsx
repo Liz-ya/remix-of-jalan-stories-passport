@@ -17,6 +17,7 @@ import type { User } from "@supabase/supabase-js";
 import { LeafletTrailMap } from "@/components/leaflet-trail-map";
 import { DemoScheduleBoard } from "@/components/demo-schedule-board";
 import { StopPhoto } from "@/components/stop-photo";
+import { isDemoMode, getDemoVisitedStopIds } from "@/lib/demo-mode";
 
 export const Route = createFileRoute("/trail")({
   head: () => ({
@@ -43,6 +44,10 @@ function TrailPage() {
   }, []);
 
   useEffect(() => {
+    if (isDemoMode()) {
+      setVisits(new Set(getDemoVisitedStopIds()));
+      return;
+    }
     if (!user) {
       setVisits(new Set());
       return;
