@@ -469,8 +469,10 @@ export function formatCountdown(ms: number): string {
 export function formatCountdownSeconds(ms: number): string {
   if (ms <= 0) return "0s";
   const totalSec = Math.floor(ms / 1000);
-  const m = Math.floor(totalSec / 60);
+  const h = Math.floor(totalSec / 3600);
+  const m = Math.floor((totalSec % 3600) / 60);
   const s = totalSec % 60;
+  if (h > 0) return `${h}h ${m}m`;
   if (m >= 1) return `${m}m ${s}s`;
   return `${s}s`;
 }

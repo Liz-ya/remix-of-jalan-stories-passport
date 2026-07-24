@@ -20,7 +20,7 @@ export const Route = createFileRoute("/")({
   component: Landing,
 });
 
-const PARTNERS = ["URA", "NHB", "STB", "SLA", "CDC", "NAC"];
+const PARTNERS = ["LTA", "NHB", "STB", "SLA", "CDC", "NAC"];
 
 // The landing page assumes the visitor arrived by scanning the QR code at
 // the New World Gate, City Square Mall stop — its heritage story comes first.
