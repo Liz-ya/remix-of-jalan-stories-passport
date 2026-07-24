@@ -85,32 +85,6 @@ export const STOPS: Stop[] = [
   },
   {
     id: 2,
-    name: "Mustafa Mall Road",
-    theme: "Textiles, henna & round-the-clock trade",
-    location: "Syed Alwi Road, by Mustafa Centre",
-    description:
-      "Syed Alwi Road is where sari silk sits next to Malay tailors sits next to Chinese haberdashers, all selling cloth by the yard and none in the same language. Since the 1930s this stretch has been Singapore's fabric market — bolts of chiffon, brocade and cotton stacked to the ceiling, prices called out in three tongues and sealed with a nod. In 1971 a small garment shop called Mustafa opened here; it never stopped growing, and never stopped opening, becoming the 24-hour mall that now anchors the street. Bridal families still come to pick sari fabric, henna artists still work the five-foot ways, and the shopkeepers still remember which grandmother preferred which supplier.",
-    lat: 1.309431,
-    lng: 103.855739,
-    x: 32,
-    y: 40,
-    facts: [
-      { label: "Fabric trade since", value: "1930s" },
-      { label: "Mustafa opened", value: "1971" },
-    ],
-    image: commonsImage(
-      "Mustafa_Centre,_Little_India,_Singapore_(9005264972).jpg",
-      "Mustafa Centre on Syed Alwi Road",
-    ),
-    puzzle: {
-      question: "What has the street outside Mustafa primarily traded in for nearly a century?",
-      options: ["Spices", "Textiles and fabric", "Gold jewellery", "Timber"],
-      correctIndex: 1,
-      hint: "By the yard, in bolts stacked to the ceiling.",
-    },
-  },
-  {
-    id: 3,
     name: "Desker Road Shophouses",
     theme: "Shophouse life & changing communities",
     location: "Desker Road",
@@ -158,6 +132,32 @@ export const STOPS: Stop[] = [
         text: "And at No. 109, behind an unmarked shopfront, coffee has been roasting through it all.",
         linkDemoId: "d-sinhin",
       },
+    },
+  },
+  {
+    id: 3,
+    name: "Mustafa Mall Road",
+    theme: "Textiles, henna & round-the-clock trade",
+    location: "Syed Alwi Road, by Mustafa Centre",
+    description:
+      "Syed Alwi Road is where sari silk sits next to Malay tailors sits next to Chinese haberdashers, all selling cloth by the yard and none in the same language. Since the 1930s this stretch has been Singapore's fabric market — bolts of chiffon, brocade and cotton stacked to the ceiling, prices called out in three tongues and sealed with a nod. In 1971 a small garment shop called Mustafa opened here; it never stopped growing, and never stopped opening, becoming the 24-hour mall that now anchors the street. Bridal families still come to pick sari fabric, henna artists still work the five-foot ways, and the shopkeepers still remember which grandmother preferred which supplier.",
+    lat: 1.309431,
+    lng: 103.855739,
+    x: 32,
+    y: 40,
+    facts: [
+      { label: "Fabric trade since", value: "1930s" },
+      { label: "Mustafa opened", value: "1971" },
+    ],
+    image: commonsImage(
+      "Mustafa_Centre,_Little_India,_Singapore_(9005264972).jpg",
+      "Mustafa Centre on Syed Alwi Road",
+    ),
+    puzzle: {
+      question: "What has the street outside Mustafa primarily traded in for nearly a century?",
+      options: ["Spices", "Textiles and fabric", "Gold jewellery", "Timber"],
+      correctIndex: 1,
+      hint: "By the yard, in bolts stacked to the ceiling.",
     },
   },
   {
@@ -271,7 +271,7 @@ export const DEMOS: DemoSlot[] = [
   },
   {
     id: "d2",
-    stopId: 2,
+    stopId: 3,
     title: "Henna art demonstrations",
     vendor: "Syed Alwi henna artists",
     start: "12:00",
@@ -279,7 +279,7 @@ export const DEMOS: DemoSlot[] = [
   },
   {
     id: "d-sinhin",
-    stopId: 3,
+    stopId: 2,
     title: "Traditional coffee roasting by Sin Hin & Co",
     vendor: "Sin Hin & Co.",
     location: "109 Desker Road",
